@@ -14,17 +14,23 @@ class Person(models.Model):
         abstract = True  # ✅ Isso evita que Django crie uma tabela para Person
 
 class Student(Person):
-    pass 
+    def __str__(self):
+        return self.name
 
 class Teacher(Person):
-    pass
+    def __str__(self):
+        return self.name
+    
 
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=10)
     tutor = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='Tutors')
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='Course')
-
+    
+    def __str__(self):
+        return self.name
+    
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150)
@@ -33,6 +39,9 @@ class Course(models.Model):
     end_date = models.DateField()
     teachers = models.ManyToManyField(Teacher, related_name='Courses')
     students = models.ManyToManyField('Student', through='Enrollment')
+
+    def __str__(self):
+        return self.name
 
 class Enrollment(models.Model):
     STATUS_CHOICES = [
