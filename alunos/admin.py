@@ -14,8 +14,8 @@ class CourseAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('name',)
     inlines = [EnrollmentInline]
-
-
+    
+    
 @admin.register(Student)
 class StudentsAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Controle de Evasão</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .status-risk {
+      color: #fff;
+      background-color: #dc3545;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+    .status-active {
+      color: #fff;
+      background-color: #198754;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-4">
+    <h1 class="text-center mb-4">Painel de Evasão de Alunos</h1>
+
+    <!-- Resumo -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card p-3 text-center">
+          <h5>Alunos Ativos</h5>
+          <h2>120</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3 text-center">
+          <h5>Alunos em Risco</h5>
+          <h2 class="text-danger">15</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3 text-center">
+          <h5>Alunos Evadidos</h5>
+          <h2 class="text-secondary">30</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de alunos -->
+    <div class="card p-4">
+      <h4>Lista de Alunos</h4>
+      <table class="table table-striped mt-3">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Curso</th>
+            <th>Status</th>
+            <th>Frequência</th>
+            <th>Nota Média</th>
+            <th>Último Acesso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>João da Silva</td>
+            <td>Informática</td>
+            <td><span class="status-risk">Em Risco</span></td>
+            <td>45%</td>
+            <td>5.2</td>
+            <td>10 dias atrás</td>
+          </tr>
+          <tr>
+            <td>Maria Oliveira</td>
+            <td>Automação</td>
+            <td><span class="status-active">Ativo</span></td>
+            <td>87%</td>
+            <td>8.0</td>
+            <td>2 dias atrás</td>
+          </tr>
+          <tr>
+            <td>Carlos Souza</td>
+            <td>Redes</td>
+            <td><span class="status-risk">Em Risco</span></td>
+            <td>50%</td>
+            <td>6.1</td>
+            <td>12 dias atrás</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>
