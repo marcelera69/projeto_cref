@@ -56,3 +56,7 @@ class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='Enrollments_student')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='Enrollments_course')
     status = models.CharField(max_length=20, choices= STATUS_CHOICES, default='active')	
+
+    def __str__(self):
+        return self.student.name + ' - ' + self.course.name
+    
