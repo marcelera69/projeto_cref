@@ -25,8 +25,8 @@ class Teacher(Person):
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=10)
-    tutor = models.ForeignKey(Teacher, on_delete=models.PROTECT, related_name='Tutors')
-    course = models.ForeignKey('Course', on_delete=models.PROTECT, related_name='Course')
+    tutor = models.ForeignKey(Teacher, on_delete=models.PROTECT, related_name='tutors_groups')
+    course = models.ForeignKey('Course', on_delete=models.PROTECT, related_name='courses')
     
     def __str__(self):
         return self.name
@@ -38,8 +38,8 @@ class Course(models.Model):
     description = models.TextField(blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
-    teachers = models.ManyToManyField(Teacher, related_name='Courses', blank=True, null=True)
-    students = models.ManyToManyField('Student', through='Enrollment', blank=True, null=True)
+    teachers = models.ManyToManyField(Teacher, related_name='teacher_courses', blank=True)
+    students = models.ManyToManyField('Student', through='Enrollment', blank=True )
 
     def __str__(self):
         return self.name
