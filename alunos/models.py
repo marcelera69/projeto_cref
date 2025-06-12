@@ -25,9 +25,12 @@ class Teacher(Person):
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=10)
-    tutor = models.ForeignKey(Teacher, on_delete=models.PROTECT, related_name='tutors_groups')
-    course = models.ForeignKey('Course', on_delete=models.PROTECT, related_name='courses')
+    tutor = models.ForeignKey(Teacher, on_delete=models.PROTECT, related_name='tutors_groups', null=True, blank=False)
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='courses', null=True, blank=False)
     
+    class Meta:
+        unique_together = ('name', 'course')
+
     def __str__(self):
         return self.name
 
