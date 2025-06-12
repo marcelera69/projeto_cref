@@ -1,101 +1,74 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="dark" class="h-100">
+<style>
+  #btnTema {
+      position: fixed;
+      bottom: 0rem;
+      right: .5rem;
+      z-index: 999;
+      
+    }
+</style>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Controle de Evasão</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
-    .card {
-      border-radius: 1rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .status-risk {
-      color: #fff;
-      background-color: #dc3545;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-    }
-    .status-active {
-      color: #fff;
-      background-color: #198754;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-    }
-  </style>
 </head>
+
 <body>
-  <div class="container my-4">
-    <h1 class="text-center mb-4">Painel de Evasão de Alunos</h1>
-
-    <!-- Resumo -->
-    <div class="row mb-4">
-      <div class="col-md-4">
-        <div class="card p-3 text-center">
-          <h5>Alunos Ativos</h5>
-          <h2>120</h2>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3 text-center">
-          <h5>Alunos em Risco</h5>
-          <h2 class="text-danger">15</h2>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3 text-center">
-          <h5>Alunos Evadidos</h5>
-          <h2 class="text-secondary">30</h2>
+  <header class="p-3 mb-3 border-bottom">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"> 
+        <a href="/"class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+          <img
+            src="https://www.ifpb.edu.br/prpipg/pesquisa/imagens-pesquisa/ifpb.png/@@images/0609b1d7-4a7d-41be-bd18-081ecb35eb9e.png"
+            alt="Logo IF" class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Inventory</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Customers</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Products</a></li>
+        </ul>
+        
+        <div class="dropdown text-end"> <a href="#"
+            class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false"> <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+              class="rounded-circle"> </a>
+          <ul class="dropdown-menu text-small">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
         </div>
       </div>
     </div>
+  </header>
 
-    <!-- Tabela de alunos -->
-    <div class="card p-4">
-      <h4>Lista de Alunos</h4>
-      <table class="table table-striped mt-3">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Curso</th>
-            <th>Status</th>
-            <th>Frequência</th>
-            <th>Nota Média</th>
-            <th>Último Acesso</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>João da Silva</td>
-            <td>Informática</td>
-            <td><span class="status-risk">Em Risco</span></td>
-            <td>45%</td>
-            <td>5.2</td>
-            <td>10 dias atrás</td>
-          </tr>
-          <tr>
-            <td>Maria Oliveira</td>
-            <td>Automação</td>
-            <td><span class="status-active">Ativo</span></td>
-            <td>87%</td>
-            <td>8.0</td>
-            <td>2 dias atrás</td>
-          </tr>
-          <tr>
-            <td>Carlos Souza</td>
-            <td>Redes</td>
-            <td><span class="status-risk">Em Risco</span></td>
-            <td>50%</td>
-            <td>6.1</td>
-            <td>12 dias atrás</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <button id="btnTema" class="btn btn-secondary position-absolute m-3" onclick="alternarTema()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
+      <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+      <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+    </svg>
+  </button>
 
+  <script>
+        function alternarTema() {
+            const html = document.documentElement;
+            const temaAtual = html.getAttribute("data-bs-theme");
+            if (temaAtual == "dark") {
+                html.setAttribute("data-bs-theme", "light");
+            } else {
+                html.setAttribute("data-bs-theme", "dark");
+            }
+            
+        }
+    </script>
 </body>
+
 </html>
