@@ -44,7 +44,7 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-
+#Colocar evadido e trancado
 class Enrollment(models.Model):
     STATUS_CHOICES = [
         ('active', 'Ativo'),
