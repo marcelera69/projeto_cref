@@ -61,5 +61,5 @@ class Enrollment(models.Model):
     status = models.CharField(max_length=20, choices= STATUS_CHOICES, default='active')	
 
     def __str__(self):
-        return self.student.name + ' - ' + self.course.name
+        return f'{self.course}'
     
