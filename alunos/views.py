@@ -2,7 +2,12 @@ from django.shortcuts import render
 from alunos.models import Student, Enrollment
 
 def alunos_view(request):
+
     students = Student.objects.all()
+    search = request.GET.get('search')
+    if search:
+        students = Student.objects.filter(name__contains=search)
+
     enrollments_by_student = []
 
     for student in students:
