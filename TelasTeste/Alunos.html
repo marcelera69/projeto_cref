@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light" class="h-100">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Controle de Evasão</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #btnTema {
+      position: fixed;
+      bottom: 0rem;
+      right: .5rem;
+      z-index: 999;
+
+    }
+  </style>
+</head>
+
+<body>
+  <header class="p-3 mb-3 border-bottom">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+          <img
+            src="https://www.ifpb.edu.br/prpipg/pesquisa/imagens-pesquisa/ifpb.png/@@images/0609b1d7-4a7d-41be-bd18-081ecb35eb9e.png"
+            alt="Logo IF" class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Inventory</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Customers</a></li>
+          <li><a href="#" class="nav-link px-2 link-body-emphasis">Products</a></li>
+        </ul>
+
+        <div class="dropdown text-end"> <a href="#"
+            class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false"> <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+              class="rounded-circle"> </a>
+          <ul class="dropdown-menu text-small">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container bg-body text-body p-4 rounded shadow">
+    <h1 class="mb-4">Painel de Cursos</h1>
+
+    <!-- Campo de busca -->
+    <form class="row g-2 mb-4">
+      <div class="col-sm-10">
+        <input type="text" class="form-control" placeholder="Buscar por nome, email ou matrícula...">
+      </div>
+      <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+      </div>
+    </form>
+
+    <!-- Botões de filtros -->
+    <div class="row row-cols-1 row-cols-md-3 g-2 mb-4">
+      <div class="col"><button class="btn btn-outline-secondary w-100">Total de alunos por curso</button></div>
+      <div class="col"><button class="btn btn-outline-secondary w-100">Alunos por grupo</button></div>
+      <div class="col"><button class="btn btn-outline-secondary w-100">Alunos em mais de um curso</button></div>
+      <div class="col"><button class="btn btn-outline-secondary w-100">Listar alunos por curso</button></div>
+      <div class="col"><button class="btn btn-outline-secondary w-100">Alunos por grupo + tutor</button></div>
+      <div class="col"><button class="btn btn-outline-secondary w-100">Professores por curso</button></div>
+    </div>
+
+    <!-- Tabela de alunos -->
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead class="">
+          <tr>
+            <th>Nome</th>
+            <th>Curso</th>
+            <th>Código</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tbody>
+          {% for student in enrollments_by_student %}
+          <tr>
+            <td>{{ student.name }}</td>
+            {% if student.enrollments %}
+            <td>{{ student.enrollments|join:", " }}</td>
+            {% else %}
+            <td>Sem matrículas</td>
+            {% endif %}
+            <td> - </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+        <!-- Mais linhas aqui -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <button id="btnTema" class="btn btn-secondary position-fixed m-3" onclick="alternarTema()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" fill="currentColor" class="bi bi-moon-stars-fill"
+      viewBox="0 0 16 16">
+      <path
+        d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278" />
+      <path
+        d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z" />
+    </svg>
+  </button>
+
+  <script>
+    function alternarTema() {
+      const html = document.documentElement;
+      const temaAtual = html.getAttribute("data-bs-theme");
+      if (temaAtual == "dark") {
+        html.setAttribute("data-bs-theme", "light");
+      } else {
+        html.setAttribute("data-bs-theme", "dark");
+      }
+
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

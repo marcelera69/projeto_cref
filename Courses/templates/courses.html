@@ -52,19 +52,19 @@
   </header>
 
   <div class="container bg-body text-body p-4 rounded shadow">
-    <h1 class="mb-4">Painel de Alunos</h1>
+    <h1 class="mb-4"><a href="{% url 'courses_list' %}" class="dropdown-item" > Painel de Cursos </a></h1>
 
     <!-- Campo de busca -->
-    <form class="row g-2 mb-4">
+    <form type="get" action="{% url 'courses_list' %}" class="row g-2 mb-4">
       <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="Buscar por nome, email ou matrícula...">
+        <input type="text" name="search" class="form-control" placeholder="Buscar por nome do Curso">
       </div>
       <div class="col-sm-2">
         <button type="submit" class="btn btn-primary w-100">Buscar</button>
       </div>
     </form>
 
-    <!-- Botões de filtros -->
+    <!-- Botões de filtros 
     <div class="row row-cols-1 row-cols-md-3 g-2 mb-4">
       <div class="col"><button class="btn btn-outline-secondary w-100">Total de alunos por curso</button></div>
       <div class="col"><button class="btn btn-outline-secondary w-100">Alunos por grupo</button></div>
@@ -73,33 +73,28 @@
       <div class="col"><button class="btn btn-outline-secondary w-100">Alunos por grupo + tutor</button></div>
       <div class="col"><button class="btn btn-outline-secondary w-100">Professores por curso</button></div>
     </div>
+    -->
 
     <!-- Tabela de alunos -->
     <div class="table-responsive">
       <table class="table table-bordered align-middle">
         <thead class="">
           <tr>
-            <th>Nome</th>
             <th>Curso</th>
-            <th>Código</th>
           </tr>
         </thead>
         <tbody>
-        <tbody>
-          {% for student in enrollments_by_student %}
+          {% if courses %}
+          {% for course in courses %}
           <tr>
-            <td>{{ student.name }}</td>
-            {% if student.enrollments %}
-            <td>{{ student.enrollments|join:", " }}</td>
-            {% else %}
-            <td>Sem matrículas</td>
-            {% endif %}
-            <td> - </td>
+            <td>{{ course.name }}</td>
           </tr>
           {% endfor %}
-        </tbody>
-
-        <!-- Mais linhas aqui -->
+          {% else %}
+          <tr>
+            <td>Nenhum curso encontrado...</td>
+          </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>

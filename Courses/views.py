@@ -1,27 +1,19 @@
 from django.shortcuts import render
-from Courses.models import Student, Enrollment
+from Courses.models import Course, Enrollment
+from unidecode import unidecode
 
-def Courses_view(request):
-    students = Student.objects.all()
-    search = request.GET.get('search')
-    if search:
-        students = students.filter(name__icontains=search)  # case insensitive
+def courses_view(request):
+    search = request.GET.get('search', '')
+    search_normalized = unidecode(search.strip().lower())
 
-    enrollments_by_student = []
+    if search_normalized:
+        # Filtra manualmente, sem depender do banco
+        courses = [
+            course for course in Course.objects.all()
+            if search_normalized in unidecode(course.name.lower())
+        ]
+    else:
+        courses = Course.objects.all().order_by('name')
 
-    for student in students:
-        enrollments = Enrollment.objects.filter(student=student)
-        course_list = [enrollment.course.name for enrollment in enrollments]
+    return render(request, 'courses.html', {'courses': courses})
 
-        enrollments_by_student.append({
-            'name': student.name,
-            'enrollments': course_list
-        })
-
-    return render(
-        request,
-        template_name='courses.html',
-        context={
-            'enrollments_by_student': enrollments_by_student,
-        }
-    )
