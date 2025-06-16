@@ -1,5 +1,5 @@
 from django.contrib import admin
-from alunos.models import Student, Teacher, Group, Course, Enrollment
+from Courses.models import Student, Teacher, Group, Course, Enrollment
 
 
 #Classe para usar o modelo Enrollment como inline no admin do Course

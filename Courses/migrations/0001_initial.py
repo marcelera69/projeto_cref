@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=10)),
                 ('tutor', models.CharField(max_length=100)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Course', to='alunos.course')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Course', to='Courses.course')),
             ],
         ),
         migrations.CreateModel(
@@ -64,18 +64,18 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('status', models.CharField(choices=[('active', 'Ativo'), ('cancelled', 'Cancelado'), ('completed', 'Concluído')], default='active', max_length=20)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments', to='alunos.course')),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments', to='alunos.student')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments', to='Courses.course')),
+                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments', to='Courses.student')),
             ],
         ),
         migrations.AddField(
             model_name='course',
             name='students',
-            field=models.ManyToManyField(through='alunos.Enrollment', to='alunos.student'),
+            field=models.ManyToManyField(through='Courses.Enrollment', to='Courses.student'),
         ),
         migrations.AddField(
             model_name='course',
             name='teachers',
-            field=models.ManyToManyField(related_name='Courses', to='alunos.teacher'),
+            field=models.ManyToManyField(related_name='Courses', to='Courses.teacher'),
         ),
     ]

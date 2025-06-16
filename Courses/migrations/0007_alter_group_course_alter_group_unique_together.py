@@ -7,14 +7,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('alunos', '0006_alter_group_course_alter_group_tutor'),
+        ('Courses', '0006_alter_group_course_alter_group_tutor'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='group',
             name='course',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='courses', to='alunos.course'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='courses', to='Courses.course'),
         ),
         migrations.AlterUniqueTogether(
             name='group',

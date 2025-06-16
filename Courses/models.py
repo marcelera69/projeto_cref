@@ -5,8 +5,8 @@ from django.db import models
 #Classe de especialização para pessoas, que será herdada por Student e Teacher
 class Person(models.Model):  
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=50)
-    email = models.EmailField(max_length=100, unique=True, null=False, blank=False)
+    code = models.CharField(max_length=50, null=True, blank=True)
+    email = models.EmailField(max_length=100, unique=True, null=True, blank=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     registration = models.CharField(max_length=12, unique=True, blank=True, null=True)
 

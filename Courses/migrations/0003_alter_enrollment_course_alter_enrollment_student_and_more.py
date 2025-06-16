@@ -7,29 +7,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('alunos', '0002_alter_group_tutor'),
+        ('Courses', '0002_alter_group_tutor'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='enrollment',
             name='course',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments_course', to='alunos.course'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments_course', to='Courses.course'),
         ),
         migrations.AlterField(
             model_name='enrollment',
             name='student',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments_student', to='alunos.student'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='Enrollments_student', to='Courses.student'),
         ),
         migrations.AlterField(
             model_name='group',
             name='course',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='Course', to='alunos.course'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='Course', to='Courses.course'),
         ),
         migrations.AlterField(
             model_name='group',
             name='tutor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='Tutors', to='alunos.teacher'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='Tutors', to='Courses.teacher'),
         ),
         migrations.AlterField(
             model_name='student',

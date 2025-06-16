@@ -90,7 +90,7 @@
           <tr>
             <td>{{ student.name }}</td>
             {% if student.enrollments %}
-            <td>{{ student.enrollments.0 }}</td> <!-- Exibe só o primeiro curso -->
+            <td>{{ student.enrollments|join:", " }}</td>
             {% else %}
             <td>Sem matrículas</td>
             {% endif %}
@@ -98,6 +98,7 @@
           </tr>
           {% endfor %}
         </tbody>
+
         <!-- Mais linhas aqui -->
         </tbody>
       </table>

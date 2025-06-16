@@ -1,20 +1,17 @@
 from django.shortcuts import render
-from alunos.models import Student, Enrollment
+from Courses.models import Student, Enrollment
 
-def alunos_view(request):
-
+def Courses_view(request):
     students = Student.objects.all()
     search = request.GET.get('search')
     if search:
-        students = Student.objects.filter(name__contains=search)
+        students = students.filter(name__icontains=search)  # case insensitive
 
     enrollments_by_student = []
 
     for student in students:
         enrollments = Enrollment.objects.filter(student=student)
-
-        # Cria uma lista com o nome de todos os cursos em que o aluno está matriculado
-        course_list = [enrollment.course for enrollment in enrollments]
+        course_list = [enrollment.course.name for enrollment in enrollments]
 
         enrollments_by_student.append({
             'name': student.name,
@@ -23,7 +20,7 @@ def alunos_view(request):
 
     return render(
         request,
-        template_name='alunos.html',
+        template_name='courses.html',
         context={
             'enrollments_by_student': enrollments_by_student,
         }

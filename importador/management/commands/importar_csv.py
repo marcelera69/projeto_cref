@@ -1,6 +1,7 @@
 import csv
+import os
 from django.core.management.base import BaseCommand
-from alunos.models import Student, Teacher, Group, Course, Enrollment
+from Courses.models import Student, Teacher, Group, Course, Enrollment
 
 class Command(BaseCommand):
     help = 'Importa alunos de um arquivo CSV para o banco de dados'
@@ -12,7 +13,7 @@ class Command(BaseCommand):
         csvfile = kwargs['csvfile']
 
         # Nome do curso será o nome do arquivo (sem extensão)
-        course_name = csvfile.split('/')[-1].replace('.csv', '')
+        course_name = os.path.splitext(os.path.basename(csvfile))[0]
 
         # Cria ou pega o curso
         course, created = Course.objects.get_or_create(name=course_name)

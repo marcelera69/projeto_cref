@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('alunos', '0004_alter_student_registration_and_more'),
+        ('Courses', '0004_alter_student_registration_and_more'),
     ]
 
     operations = [
@@ -29,21 +29,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='course',
             name='students',
-            field=models.ManyToManyField(blank=True, through='alunos.Enrollment', to='alunos.student'),
+            field=models.ManyToManyField(blank=True, through='Courses.Enrollment', to='Courses.student'),
         ),
         migrations.AlterField(
             model_name='course',
             name='teachers',
-            field=models.ManyToManyField(blank=True, related_name='teacher_courses', to='alunos.teacher'),
+            field=models.ManyToManyField(blank=True, related_name='teacher_courses', to='Courses.teacher'),
         ),
         migrations.AlterField(
             model_name='group',
             name='course',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='courses', to='alunos.course'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='courses', to='Courses.course'),
         ),
         migrations.AlterField(
             model_name='group',
             name='tutor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='tutors_groups', to='alunos.teacher'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='tutors_groups', to='Courses.teacher'),
         ),
     ]
