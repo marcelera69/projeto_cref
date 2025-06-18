@@ -16,6 +16,7 @@ class EnrollmentInline(admin.TabularInline):
     model = Enrollment
     extra = 0
     autocomplete_fields = ['student']
+    fields = ('student', 'group', 'status')
     ordering = ('student',)
 
 @admin.register(Course)

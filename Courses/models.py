@@ -59,6 +59,7 @@ class Module(models.Model):
     number_classes = models.IntegerField(default=0, blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
     teachers = models.ManyToManyField(Teacher, related_name='teacher_modules', blank=True, null=True)
+    
 
 
 class Enrollment(models.Model):
@@ -73,6 +74,7 @@ class Enrollment(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='Enrollments_student')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='Enrollments_course')
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='enrollments', null=True, blank=True)
     status = models.CharField(max_length=20, choices= STATUS_CHOICES, default='active')	
 
     def __str__(self):
