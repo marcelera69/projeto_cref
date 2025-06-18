@@ -44,7 +44,6 @@ class Command(BaseCommand):
                     self.stdout.write(f'Estudante "{nome}" já existe.')
 
                 # Procura o grupo com mesmo nome E ligado a esse curso
-                group = None
                 if grupo_nome:
                     group = Group.objects.filter(name=grupo_nome, course=course).first()
                     if not group:
@@ -58,6 +57,7 @@ class Command(BaseCommand):
                 enrollment, created = Enrollment.objects.get_or_create(
                     student=student,
                     course=course,
+                    group=group if grupo_nome else None,
                     defaults={'status': 'active'}
                 )
                 if created:
