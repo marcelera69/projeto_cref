@@ -1,19 +1,29 @@
 from django.contrib import admin
-from Courses.models import Student, Teacher, Group, Course, Enrollment
+from Courses.models import Student, Teacher, Tutor, Group, Course, Module, Enrollment
 
+
+class ModuleInline(admin.TabularInline):
+    model = Module
+    extra = 0
+    autocomplete_fields = ['teachers']
+    fields = ('name', 'description', 'number_classes', 'teachers')
+    readonly_fields = ('number_classes',)
+    ordering = ('name',)
+    search_fields = ('name',)
 
 #Classe para usar o modelo Enrollment como inline no admin do Course
 class EnrollmentInline(admin.TabularInline):
     model = Enrollment
     extra = 0
     autocomplete_fields = ['student']
+    ordering = ('student',)
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
     ordering = ('name',)
-    inlines = [EnrollmentInline]
+    inlines = [EnrollmentInline, ModuleInline]
     
     
 @admin.register(Student)
