@@ -2,10 +2,11 @@
 
 {% block content %}
     <h1>Formulario</h1>
-    <form action="post" enctype="multipart/form-data">
+    <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             {{form}}
         </div>
+        <input type="submit" value="Cadastrar" class="btn btn-primary">
     </form>
 {% endblock %}

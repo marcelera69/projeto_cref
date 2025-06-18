@@ -2,6 +2,9 @@ from django.shortcuts import render
 from Courses.models import Course, Enrollment
 from unidecode import unidecode
 from Courses.forms import CourseForm
+from django.shortcuts import redirect
+
+
 
 def courses_view(request):
     search = request.GET.get('search', '')
@@ -19,6 +22,15 @@ def courses_view(request):
     return render(request, 'courses.html', {'courses': courses})
 
 def new_course_view(request):
-    new_course_form = CourseForm()
+
+    if request.method == 'POST':
+        new_course_form = CourseForm(request.POST)
+        if new_course_form.is_valid():
+            new_course_form.save()
+            return redirect('courses_list')
+    else:
+        # Exibe o formulário vazio
+        new_course_form = CourseForm()
+
     return render(request, 'new_course.html', {'form': new_course_form})
 
