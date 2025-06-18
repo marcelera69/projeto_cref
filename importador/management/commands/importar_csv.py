@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
                 # Pegando dados do CSV (ajuste nomes das colunas conforme seu CSV)
                 nome = row.get('Nome') or row.get('\ufeffNome')  # Caso tenha BOM
-                code = row.get('Code')
+                code = row.get('Sobrenome')
                 email = row.get('Endereço de email')
                 grupo_nome = row.get('Grupos')
 
