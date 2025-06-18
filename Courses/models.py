@@ -20,12 +20,16 @@ class Student(Person):
 class Teacher(Person):
     def __str__(self):
         return self.name
+
+class Tutor(Person):
+    def __str__(self):
+        return self.name
     
 
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=10)
-    tutor = models.ForeignKey(Teacher, on_delete=models.PROTECT, related_name='tutors_groups', null=True, blank=False)
+    tutor = models.ForeignKey(Tutor, on_delete=models.PROTECT, related_name='tutors_groups', null=True, blank=False)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='courses', null=True, blank=False)
     
     class Meta:
@@ -42,17 +46,28 @@ class Course(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     teachers = models.ManyToManyField(Teacher, related_name='teacher_courses', blank=True)
+    tutors = models.ManyToManyField(Tutor, related_name='teacher_courses', null=True, blank=True)
     students = models.ManyToManyField('Student', through='Enrollment', blank=True )
 
     def __str__(self):
         return self.name
 
-#Colocar evadido e trancado
+
+class Module(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    number_classes = models.IntegerField(default=0, blank=True, null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
+    teachers = models.ManyToManyField(Teacher, related_name='teacher_modules', blank=True, null=True)
+
+
 class Enrollment(models.Model):
     STATUS_CHOICES = [
         ('active', 'Ativo'),
-        ('cancelled', 'Cancelado'),
-        ('completed', 'Concluído'),
+        ('approved', 'Aprovado'),
+        ('failed', 'Reprovado'),
+        ('locked', 'Trancado'),
+        ('dropped', 'Evadido'),
     ]
 
     id = models.AutoField(primary_key=True)
