@@ -20,11 +20,18 @@
 </head>
 <body class="d-flex align-items-center py-4 bg-body-tertiary h-100">
     <main class="form-container card">
-        <form action="">
+        {% block content %}
+        <form method="post" class="form-signin">
+            {% csrf_token %}
+
             <div class="">
                 <img src="https://www.ifpb.edu.br/prpipg/pesquisa/imagens-pesquisa/ifpb.png/@@images/0609b1d7-4a7d-41be-bd18-081ecb35eb9e.png" alt="" class="mb-4" height="40" width="56">
-                <h1 class="h3 mb-3 fw-normal">Faça o seu Login</h1>
+                <h1 class="h3 mb-3 fw-normal">Faça seu Cadastro</h1>
             </div>
+
+            {{form.as_p}}    
+
+            <!-- 
             <div class="form-floating">
                 <input type="email" class="form-control" id="floatingInput" placeholder="exemplo@gmail.com">
                 <label for="floatingInput">E-mail</label>
@@ -37,8 +44,10 @@
                 <input type="checkbox" class="form-check-input" id="flexCheckDefault">
                 <label for="flexCheckDefault">Lembre de mim</label>
             </div>
-            <button class="btn btn-primary w-100 py-2">Entrar</button>
+             -->
+            <input type="submit" value="cadastrar" class="btn btn-primary w-100 py-2">
         </form>
+        {% endblock %}
     </main>
     <button id="btnTema" class="btn btn-secondary position-fixed bottom-0 end-0 m-3" onclick="alternarTema()">
         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
