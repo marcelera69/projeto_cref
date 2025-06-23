@@ -20,6 +20,7 @@ def courses_view(request):
 
     return render(request, 'courses.html', {'courses': courses})
 
+
 def new_course_view(request):
 
     if request.method == 'POST':
