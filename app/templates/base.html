@@ -57,9 +57,10 @@
             <li><a href=" {% url 'courses_list' %} " class="nav-link px-2 link-secondary">Painel De Cursos</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'new_course' %}" class="nav-link px-2 link-body-emphasis">Incluir Curso</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}" class="nav-link px-2 link-body-emphasis">Login</a></li>
             {% endif %}    
-            <li><a href="{% url 'login' %}" class="nav-link px-2 link-body-emphasis">Login</a></li>
-            <li><a href="{% url 'register' %}" class="nav-link px-2 link-body-emphasis">Cadastrar</a></li>
+            <li><a href="{% url 'register' %}" class="nav-link px-2 link-body-emphasis">Cadastrar Usuário</a></li>
             </ul>
 
             {% if user.is_authenticated %}
