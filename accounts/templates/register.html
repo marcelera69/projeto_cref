@@ -85,12 +85,16 @@
 
 <body class="d-flex align-items-center h-100">
   <!--Botao de voltar-->
-  <a href="{% url 'courses_list' %}" class="btn btn-outline-secondary position-absolute top-0 start-0 m-3 d-flex align-items-center gap-1">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-      <path fill-rule="evenodd"d="M15 8a.5.5 0 0 1-.5.5H3.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z" />
+  <a id="btnVoltar" href="{% url 'courses_list' %}"
+    class="btn position-absolute top-0 start-0 m-3 d-flex align-items-center gap-1">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left"
+      viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M15 8a.5.5 0 0 1-.5.5H3.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z" />
     </svg>
     <span>Voltar</span>
   </a>
+
 
   <main class="form-container">
     {% block content %}
@@ -142,8 +146,22 @@
     function alternarTema() {
       const html = document.documentElement;
       const temaAtual = html.getAttribute("data-bs-theme");
-      html.setAttribute("data-bs-theme", temaAtual === "dark" ? "light" : "dark");
+      const novoTema = temaAtual === "dark" ? "light" : "dark";
+      html.setAttribute("data-bs-theme", novoTema);
+
+      ajustarBotaoVoltar(novoTema);
     }
+
+    function ajustarBotaoVoltar(tema) {
+      const btn = document.getElementById("btnVoltar");
+      btn.classList.remove("btn-outline-secondary", "btn-outline-light");
+      btn.classList.add(tema === "dark" ? "btn-outline-light" : "btn-outline-secondary");
+    }
+
+    // Aplica o estilo correto ao carregar a página
+    document.addEventListener("DOMContentLoaded", () => {
+      ajustarBotaoVoltar(document.documentElement.getAttribute("data-bs-theme"));
+    });
   </script>
 </body>
 
