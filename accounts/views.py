@@ -25,7 +25,7 @@ def register_view(request):
                 message
             )
             '''
-            return redirect('courses_list')
+            return redirect('login')
     else:
         user_form = UserCreationForm()
 

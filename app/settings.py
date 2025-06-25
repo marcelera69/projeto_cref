@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Courses',
     'importador',
     'accounts',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
