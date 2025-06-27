@@ -3,34 +3,41 @@ from Courses.models import Course, Enrollment
 from unidecode import unidecode
 from Courses.forms import CourseModelForm
 from django.shortcuts import redirect
+from django.views import View
 
 
-def courses_view(request):
-    search = request.GET.get('search', '')
-    search_normalized = unidecode(search.strip().lower())
+class CoursesListView(View):
+    
+    def get(self, request):
+        search = request.GET.get('search', '')
+        search_normalized = unidecode(search.strip().lower())
 
-    if search_normalized:
-        # Filtra manualmente, sem depender do banco
-        courses = [
-            course for course in Course.objects.all()
-            if search_normalized in unidecode(course.name.lower())
-        ]
-    else:
-        courses = Course.objects.all().order_by('name')
+        if search_normalized:
+            # Filtra manualmente, sem depender do banco
+            courses = [
+                course for course in Course.objects.all()
+                if search_normalized in unidecode(course.name.lower())
+            ]
+        else:
+            courses = Course.objects.all().order_by('name')
 
-    return render(request, 'courses.html', {'courses': courses})
+        return render(request, 'courses.html', {'courses': courses})
+    
+    
+class NewCourseView(View):
 
-
-def new_course_view(request):
-
-    if request.method == 'POST':
+    def get(self, request):
+        # Exibe o formulário vazio
+        new_course_form = CourseModelForm()
+        return render(request, 'new_course.html', {'form': new_course_form})
+    
+    def post(self, request):
         new_course_form = CourseModelForm(request.POST)
         if new_course_form.is_valid():
             new_course_form.save()
             return redirect('courses_list')
-    else:
-        # Exibe o formulário vazio
-        new_course_form = CourseModelForm()
+        else:
+            # Se o formulário não for válido, exibe novamente com erros
+            return render(request, 'new_course.html', {'form': new_course_form})
 
-    return render(request, 'new_course.html', {'form': new_course_form})
 
