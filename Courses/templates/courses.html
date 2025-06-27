@@ -20,7 +20,7 @@
 
 
   <!-- <main class="flex-shrink-0"></main> -->
-  <div class="container py-5 bg-body-tertiary shadow-sm rounded-3 border">
+  <div class="container py-5 bg-body-tertiary shadow-sm rounded-3 border" style="max-width:1100px;">
     
     <div class="text-center mb-5">
       <h1 class="fw-bold text-primary">📚 Painel de Cursos</h1>
@@ -40,7 +40,7 @@
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {% for course in courses %}
         <div class="col">
-          <a href="#" class="col text-decoration-none text-body-emphasis">
+          <a href="{% url 'course_detail' course.pk %}" class="col text-decoration-none text-body-emphasis" >
             <div class="card h-100 shadow border-0">
               <div class="card-body">
                 <h5 class="card-title text-primary">{{ course.name }}</h5>
