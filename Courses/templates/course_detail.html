@@ -1,107 +1,83 @@
 {% extends 'base.html' %}
-{% load humanize %}
-{% block title %}{{ object.name }} | Detalhes do Curso{% endblock %}
+{% block title %}Detalhes do Curso{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <!-- Título e botão voltar -->
-      <div class="d-flex justify-content-between align-items-start flex-wrap mb-4">
-        <div>
-          <h2 class="card-title">{{ object.name }}</h2>
-          {% if object.description %}
-            <p class="text-muted">{{ object.description }}</p>
-          {% endif %}
-          <p class="mb-1 text-muted">Início: {{ object.start_date|date:"d/m/Y" }}</p>
-          <p class="text-muted">Fim: {{ object.end_date|date:"d/m/Y" }}</p>
-        </div>
+  <div class="container">
+    <div class="container pb-5 bg-body-tertiary shadow-sm rounded-3 border">
+
+      <!-- Botao de Voltar -->
+      <div class="mb-2 mt-3 d-flex flex-row-reverse">
         <a href="{% url 'courses_list' %}" class="btn btn-outline-secondary">
-          <i class="bi bi-arrow-left-circle me-1"></i> Voltar
+          ← Voltar para a listagem de cursos
         </a>
       </div>
-
-      <!-- Total de alunos -->
-      <div class="mb-4">
-        <h5>Total de Alunos Matriculados</h5>
-        <p class="fs-4 fw-semibold">{{ object.students.count|default:"0" }}</p>
-      </div>
+      <h2 class="mb-3">{{ object.name }}</h2>
+      <p class="mb-1"><strong>Código:</strong> CREF2025</p>
+      <p class="mb-1"><strong>Duração:</strong> 
+        {% if object.duration != 'Não definido' %}
+          {{ object.duration }} dias
+        {% else %}
+          <em>Duração não definida</em>
+        {% endif %}
+      </p>
+      <p><strong>Total de alunos:</strong> {{ object.students.count }}</p>
+      <hr>
 
       <!-- Grupos do curso -->
-      {% if object.courses.all %}
-      <h5 class="mb-3">Grupos</h5>
-      <div class="table-responsive mb-4">
-        <table class="table table-bordered table-hover align-middle">
-          <thead class="table-light">
-            <tr>
-              <th>Nome do Grupo</th>
-              <th>Quantidade de Alunos</th>
-              <th>Tutor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for group in object.courses.all %}
+      <h4 class="mt-4 mb-3">Grupos</h4>
+      {% if object.courses.exists %}
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
               <tr>
-                <td>{{ group.name }}</td>
-                <td>{{ group.enrollments.count }}</td>
-                <td>{{ group.tutor.name }}</td>
+                <th>Grupo</th>
+                <th>Quantidade de Alunos</th>
+                <th>Tutor Responsável</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {% for grupo in object.courses.all %}
+                <tr>
+                  <td>{{ grupo.name }}</td>
+                  <td>{{ grupo.enrollments.count }}</td>
+                  <td>{{ grupo.tutor.name }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted">Nenhum grupo registrado para este curso.</p>
       {% endif %}
 
       <!-- Professores -->
-      {% if object.teachers.all %}
-      <h5 class="mb-3">Professores do Curso</h5>
-      <ul class="list-group mb-4">
-        {% for teacher in object.teachers.all %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ teacher.name }}
-            <span class="badge bg-primary rounded-pill">Professor</span>
-          </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-
-      <!-- Módulos -->
-      {% if object.modules.all %}
-      <h5 class="mb-3">Módulos</h5>
-      <div class="table-responsive mb-3">
-        <table class="table table-sm table-striped align-middle">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Aulas</th>
-              <th>Professores</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for module in object.modules.all %}
-            <tr>
-              <td>{{ module.name }}</td>
-              <td>{{ module.number_classes }}</td>
-              <td>
-                {% for prof in module.teachers.all %}
-                  <span class="badge text-bg-secondary">{{ prof.name }}</span>
-                {% empty %}
-                  <em>Sem professor</em>
-                {% endfor %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <h4 class="mt-4 mb-3">Professores</h4>
+      {% if object.teachers.exists %}
+        <ul class="list-group mb-4">
+          {% for professor in object.teachers.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ professor.name }}
+              <span class="badge bg-primary">Professor</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Nenhum professor associado a este curso.</p>
       {% endif %}
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-// Scripts personalizados, se necessário
-</script>
+  <style>
+    .card-hover {
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card-hover:hover {
+      box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.25);
+      border-color: #0d6efd !important;
+      background-color: #f8f9fa !important;
+    }
+  </style>
 {% endblock %}
