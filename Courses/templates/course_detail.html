@@ -1,83 +1,117 @@
 {% extends 'base.html' %}
 {% block title %}Detalhes do Curso{% endblock %}
 
-{% block content %}
-  <div class="container">
-    <div class="container pb-5 bg-body-tertiary shadow-sm rounded-3 border">
-
-      <!-- Botao de Voltar -->
-      <div class="mb-2 mt-3 d-flex flex-row-reverse">
-        <a href="{% url 'courses_list' %}" class="btn btn-outline-secondary">
-          ← Voltar para a listagem de cursos
-        </a>
-      </div>
-      <h2 class="mb-3">{{ object.name }}</h2>
-      <p class="mb-1"><strong>Código:</strong> CREF2025</p>
-      <p class="mb-1"><strong>Duração:</strong> 
-        {% if object.duration != 'Não definido' %}
-          {{ object.duration }} dias
-        {% else %}
-          <em>Duração não definida</em>
-        {% endif %}
-      </p>
-      <p><strong>Total de alunos:</strong> {{ object.students.count }}</p>
-      <hr>
-
-      <!-- Grupos do curso -->
-      <h4 class="mt-4 mb-3">Grupos</h4>
-      {% if object.courses.exists %}
-        <div class="table-responsive mb-4">
-          <table class="table table-bordered align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>Grupo</th>
-                <th>Quantidade de Alunos</th>
-                <th>Tutor Responsável</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for grupo in object.courses.all %}
-                <tr>
-                  <td>{{ grupo.name }}</td>
-                  <td>{{ grupo.enrollments.count }}</td>
-                  <td>{{ grupo.tutor.name }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <p class="text-muted">Nenhum grupo registrado para este curso.</p>
-      {% endif %}
-
-      <!-- Professores -->
-      <h4 class="mt-4 mb-3">Professores</h4>
-      {% if object.teachers.exists %}
-        <ul class="list-group mb-4">
-          {% for professor in object.teachers.all %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              {{ professor.name }}
-              <span class="badge bg-primary">Professor</span>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p class="text-muted">Nenhum professor associado a este curso.</p>
-      {% endif %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block scripts %}
   <style>
     .card-hover {
       transition: all 0.3s ease-in-out;
     }
 
     .card-hover:hover {
-      box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.25);
+      box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px);
       border-color: #0d6efd !important;
-      background-color: #f8f9fa !important;
+    }
+
+    .section-title {
+      color: #0d6efd;
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+
+    .back-button i {
+      margin-right: 4px;
+    }
+
+    .custom-table thead {
+      background-color: #f8f9fa;
     }
   </style>
+  
+{% block content %}
+
+  <div class="container pt-4 pb-1 bg-body-tertiary shadow-sm rounded-3 border">
+    <div class="mb-3">
+      <a href="{% url 'courses_list' %}" class="btn btn-outline-primary back-button">
+        <i class="bi bi-arrow-left"></i> Voltar para os cursos
+      </a>
+    </div>
+
+    <div class="card shadow-sm border card-hover">
+      <div class="card-body">
+        <h2 class="card-title text-primary">{{ object.name }}</h2>
+        <p><strong>Código:</strong> CREF2025</p>
+        <p>
+          <strong>Duração:</strong>
+          {% if object.duration != 'Não definido' %}
+            {{ object.duration }} dias
+          {% else %}
+            <em>Duração não definida</em>
+          {% endif %}
+        </p>
+        <p><strong>Total de alunos:</strong> {{ object.students.count }}</p>
+      </div>
+    </div>
+
+    <!-- Grupos -->
+    <h4 class="section-title mt-4">Grupos do Curso</h4>
+    {% if object.courses.exists %}
+      <div class="table-responsive mt-2">
+        <table class="table table-bordered custom-table align-middle">
+          <thead>
+            <tr>
+              <th>Grupo</th>
+              <th>Quantidade de Alunos</th>
+              <th>Tutor Responsável</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for grupo in object.courses.all %}
+              <tr>
+                <td>{{ grupo.name }}</td>
+                <td>{{ grupo.enrollments.count }}</td>
+                <td>{{ grupo.tutor.name }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted">Nenhum grupo registrado para este curso.</p>
+    {% endif %}
+
+    <!-- Professores -->
+    <h4 class="section-title mt-2">Professores</h4>
+    {% if object.teachers.exists %}
+      <ul class="list-group mb-4 mt-2">
+        {% for professor in object.teachers.all %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ professor.name }}
+            <span class="badge bg-primary">Professor</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">Nenhum professor associado a este curso.</p>
+    {% endif %}
+
+     <!-- Lista de Alunos -->
+    <h4 class="section-title mt-4">Alunos Matriculados</h4>
+    {% with enrollments=object.Enrollments_course.all %}
+      {% if enrollments %}
+        <ul class="list-group mb-4 mt-2">
+          {% for enrollment in enrollments %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ enrollment.student.name }}
+              <span class="badge bg-secondary">
+                {{ enrollment.get_status_display }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Nenhum aluno matriculado neste curso.</p>
+      {% endif %}
+    {% endwith %}
+
+  </div>
 {% endblock %}
