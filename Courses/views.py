@@ -31,5 +31,7 @@ class NewCourseView(CreateView):
     template_name = 'new_course.html'
     success_url = '/cursos/'
 
-
+class CourseDetailView(DetailView):
+    model = Course
+    template_name = 'course_detail.html'
 

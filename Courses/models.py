@@ -49,6 +49,11 @@ class Course(models.Model):
     tutors = models.ManyToManyField(Tutor, related_name='teacher_courses', null=True, blank=True)
     students = models.ManyToManyField('Student', through='Enrollment', blank=True )
 
+    def duration(self):
+        if self.start_date and self.end_date:
+            return (self.end_date - self.start_date).days
+        return 'Não definido'
+
     def __str__(self):
         return self.name
 
