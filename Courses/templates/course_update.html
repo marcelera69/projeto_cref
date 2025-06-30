@@ -19,16 +19,17 @@
   }
 </style>
 
-<div class="container py-4">
+<div class="container pt-4 pb-1 bg-body-tertiary shadow-sm rounded-3 border" style="max-width: 950px;">
+  
   <!-- Botão Voltar -->
-  <div class="mb-3">
-    <a href="{% url 'courses_list' %}" class="btn btn-outline-secondary">
-      <i class="bi bi-arrow-left"></i> Voltar para cursos
+  <div class="mb-3 btn-outline-danger">
+    <a href="{% url 'course_detail' course.pk %}" class="btn btn-outline-danger">
+      <i class="bi bi-arrow-left"></i> Cancelar e Voltar
     </a>
   </div>
 
   <!-- Card de formulário -->
-  <div class="card form-card shadow-sm">
+  <div class="card form-card shadow-sm m-0">
     <div class="card-body">
       <h2 class="text-primary mb-4">Editar Curso: {{ course.name }}</h2>
 

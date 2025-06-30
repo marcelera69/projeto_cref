@@ -30,9 +30,16 @@
 {% block content %}
 
   <div class="container pt-4 pb-1 bg-body-tertiary shadow-sm rounded-3 border" style="max-width: 950px;">
-    <div class="mb-3">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
       <a href="{% url 'courses_list' %}" class="btn btn-outline-primary back-button">
-        <i class="bi bi-arrow-left"></i> Voltar para os cursos
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 1-.5.5H3.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z" />
+        </svg>
+        Voltar para os cursos
+      </a>
+
+      <a href="{% url 'course_update' course.pk %}" class="btn btn-outline-primary back-button">
+        Editar Curso  
       </a>
     </div>
 
@@ -42,8 +49,8 @@
         <p><strong>Código:</strong> CREF2025</p>
         <p>
           <strong>Duração:</strong>
-          {% if object.duration != 'Não definido' %}
-            {{ object.duration }} dias
+          {% if object.duration != 'Não definido' %}           
+            {{ object.start_date }} - {{ object.end_date }} ({{ object.duration }} dias)
           {% else %}
             <em>Duração não definida</em>
           {% endif %}
