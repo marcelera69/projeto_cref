@@ -66,3 +66,8 @@ class CourseupdateView(UpdateView):
         # Caso o formulário seja inválido
         context = self.get_context_data(form=form)
         return self.render_to_response(context)
+    
+class CourseDeleteView(DeleteView):
+    model = Course
+    template_name = 'course_delete.html'
+    success_url = '/cursos/'
