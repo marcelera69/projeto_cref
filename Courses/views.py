@@ -4,6 +4,7 @@ from unidecode import unidecode
 from Courses.forms import CourseModelForm
 from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from Courses.models import Enrollment
 
 class CoursesListView(ListView):
     model = Course
@@ -34,4 +35,16 @@ class NewCourseView(CreateView):
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
+
+class CourseupdateView(UpdateView):
+    model = Course
+    form_class = CourseModelForm
+    template_name = 'course_update.html'
+    success_url = '/cursos/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = self.get_object()
+        context['students'] = Enrollment.objects.filter(course=course).select_related('student', 'group')
+        return context
 

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Editar Curso{% endblock %}
+
+{% block content %}
+  <style>
+    .form-section-title {
+      font-weight: 600;
+      color: #0d6efd;
+      margin-top: 2rem;
+    }
+    .form-card {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+      border-color: #0d6efd;
+    }
+  </style>
+
+  <div class="container py-4">
+    <!-- Botão Voltar -->
+    <div class="mb-3">
+      <a href="{% url 'courses_list' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar para cursos
+      </a>
+    </div>
+
+    <!-- Card de formulário -->
+    <div class="card form-card shadow-sm">
+      <div class="card-body">
+        <h2 class="text-primary mb-4">Editar Curso: {{ course.name }}</h2>
+
+        <form method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <div class="row g-3">
+            <!-- Nome -->
+            <div class="col-md-6">
+              <label for="id_name" class="form-label">Nome do Curso</label>
+              {{ form.name|add_class:"form-control" }}
+            </div>
+
+            <!-- Datas -->
+            <div class="col-md-3">
+              <label for="id_start_date" class="form-label">Início</label>
+              {{ form.start_date|add_class:"form-control" }}
+            </div>
+            <div class="col-md-3">
+              <label for="id_end_date" class="form-label">Término</label>
+              {{ form.end_date|add_class:"form-control" }}
+            </div>
+
+            <!-- Descrição -->
+            <div class="col-12">
+              <label for="id_description" class="form-label">Descrição</label>
+              {{ form.description|add_class:"form-control" }}
+            </div>
+
+            <!-- Professores -->
+            <div class="col-md-6">
+              <label for="id_teachers" class="form-label">Professores</label>
+              {{ form.teachers|add_class:"form-select" }}
+            </div>
+
+            <!-- Tutores -->
+            <div class="col-md-6">
+              <label for="id_tutors" class="form-label">Tutores</label>
+              {{ form.tutors|add_class:"form-select" }}
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <!-- Alunos Matriculados -->
+          <h5 class="form-section-title">Alunos Matriculados</h5>
+          {% if students %}
+            <div class="table-responsive">
+              <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                    <th>Grupo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for enrollment in students %}
+                  <tr>
+                    <td>{{ enrollment.student.name }}</td>
+                    <td>{{ enrollment.student.registration }}</td>
+                    <td>{{ enrollment.group.name }}</td>
+                    <td>{{ enrollment.get_status_display }}</td>
+                    <td>
+                      <a href="#" class="btn btn-sm btn-outline-danger">Remover</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-muted">Nenhum aluno matriculado.</p>
+          {% endif %}
+
+          <!-- Botão para salvar -->
+          <div class="mt-4">
+            <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
