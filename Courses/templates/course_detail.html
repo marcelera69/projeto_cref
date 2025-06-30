@@ -49,6 +49,9 @@
           {% endif %}
         </p>
         <p><strong>Total de alunos:</strong> {{ object.students.count }}</p>
+        {% if object.description %}
+          <p><strong>Descrição: </strong> {{ object.description }}</p>
+        {% endif %}
       </div>
     </div>
 

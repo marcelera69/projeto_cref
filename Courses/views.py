@@ -48,3 +48,21 @@ class CourseupdateView(UpdateView):
         context['students'] = Enrollment.objects.filter(course=course).select_related('student', 'group')
         return context
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            # Primeiro salva as alterações do curso
+            form.save()
+
+            # Em seguida, remove alunos se checkboxes estiverem marcados
+            alunos_ids = request.POST.getlist('remover_alunos')
+            if alunos_ids:
+                Enrollment.objects.filter(course=self.object, student__id__in=alunos_ids).delete()
+
+            return redirect(self.get_success_url())
+
+        # Caso o formulário seja inválido
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
