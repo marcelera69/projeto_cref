@@ -6,6 +6,8 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from Courses.models import Enrollment
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 class CoursesListView(ListView):
     model = Course
@@ -26,19 +28,22 @@ class CoursesListView(ListView):
 
         return courses
     
-    
-class NewCourseView(CreateView):
-    model = Course
-    form_class = CourseModelForm
-    template_name = 'new_course.html'
-    success_url = '/cursos/'
-
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
 
 
 
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class NewCourseView(CreateView):
+    model = Course
+    form_class = CourseModelForm
+    template_name = 'new_course.html'
+    success_url = '/cursos/'
+
+
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class CourseupdateView(UpdateView):
     model = Course
     form_class = CourseModelForm
@@ -75,6 +80,7 @@ class CourseupdateView(UpdateView):
 
 
 
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_delete.html'

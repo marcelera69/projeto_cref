@@ -63,9 +63,11 @@
     <a href="{% url 'courses_list' %}" class="btn btn-outline-primary">
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
-    <a href="{% url 'course_update' course.pk %}" class="btn btn-outline-primary">
-      <i class="bi bi-pencil-square"></i> Editar Curso
-    </a>
+    {% if user.is_authenticated and user.is_staff %}
+      <a href="{% url 'course_update' course.pk %}" class="btn btn-outline-primary">
+        <i class="bi bi-pencil-square"></i> Editar Curso
+      </a>
+    {% endif %}
   </div>
 
   <div class="card shadow-sm border-0 card-hover">
