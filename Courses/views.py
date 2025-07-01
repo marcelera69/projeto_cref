@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from Courses.models import Course
 from unidecode import unidecode
 from Courses.forms import CourseModelForm
 from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from Courses.models import Enrollment
+from django.urls import reverse_lazy
 
 class CoursesListView(ListView):
     model = Course
@@ -35,6 +36,8 @@ class NewCourseView(CreateView):
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
+
+
 
 class CourseupdateView(UpdateView):
     model = Course
@@ -67,6 +70,11 @@ class CourseupdateView(UpdateView):
         context = self.get_context_data(form=form)
         return self.render_to_response(context)
     
+    def get_success_url(self):
+        return reverse_lazy('course_detail', kwargs={'pk': self.object.pk})
+
+
+
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_delete.html'
