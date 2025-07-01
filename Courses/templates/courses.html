@@ -1,60 +1,121 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <style>
-    /* Adicionado: Efeito hover nos títulos dos cursos */
-    .card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+<style>
+  body {
+    background: #f9fafb;
+  }
 
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(37, 37, 37, 0.1);
-    }
+  .page-container {
+    max-width: 1000px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+  }
 
-    .card:hover .card-title {
-      color: #3574eb; /* Azul Bootstrap */
-    }
-  </style>
+  .header-section {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
 
+  .header-section h1 {
+    font-weight: 700;
+    color: #0d6efd;
+  }
 
+  /* Busca integrada com botão dentro do input */
+  .search-wrapper {
+    max-width: 400px;
+    margin: 0 auto 3rem auto;
+    position: relative;
+  }
 
-  <!-- <main class="flex-shrink-0"></main> -->
-  <div class="container py-5 bg-body-tertiary shadow-sm rounded-3 border" style="max-width:1100px;">
-    
-    <div class="text-center mb-5">
-      <h1 class="fw-bold text-primary">📚 Painel de Cursos</h1>
-      <p class="text-muted">Consulte os cursos disponíveis e filtre por nome</p>
-    </div>
+  .search-wrapper input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 3.5rem 0.6rem 1rem;
+    border-radius: 30px;
+    border: 1.5px solid #ced4da;
+    transition: border-color 0.3s ease;
+  }
 
-    <!-- Campo de busca -->
-    <form method="get" action="{% url 'courses_list' %}" class="input-group mb-4 shadow-sm">
-      <input type="text" name="search" class="form-control" placeholder="Buscar por nome do curso..." aria-label="Buscar">
-      <button type="submit" class="btn btn-primary">
-        <i class="bi bi-search"></i> Buscar
-      </button>
-    </form>
+  .search-wrapper input[type="text"]:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
+  }
 
-    <!-- Lista de cursos -->
-    {% if courses %}
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {% for course in courses %}
-        <div class="col">
-          <a href="{% url 'course_detail' course.pk %}" class="col text-decoration-none text-body-emphasis" >
-            <div class="card h-100 shadow border-0">
-              <div class="card-body">
-                <h5 class="card-title text-primary">{{ course.name }}</h5>
-              </div>
-            </div>
-          </a>
-        </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="alert alert-warning text-center" role="alert">
-        Nenhum curso encontrado.
-      </div>
-    {% endif %}
+  .search-wrapper button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #0d6efd;
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  /* Grid dos cursos */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 1.6rem;
+  }
+
+  .course-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.6rem 1.8rem;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .course-card:hover {
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+    transform: translateY(-6px);
+  }
+
+  .course-card h5 {
+    color: #0d6efd;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  .no-courses {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+</style>
+
+<div class="page-container">
+  <section class="header-section">
+    <h1>📚 Painel de Cursos</h1>
+    <p class="text-muted">Consulte os cursos disponíveis e filtre por nome</p>
+  </section>
+
+  <form method="get" action="{% url 'courses_list' %}" class="search-wrapper" role="search" aria-label="Buscar cursos">
+    <input type="text" name="search" placeholder="Buscar por nome do curso..." value="{{ request.GET.search }}">
+    <button type="submit" aria-label="Buscar cursos">
+      <i class="bi bi-search"></i>
+    </button>
+  </form>
+
+  {% if courses %}
+  <div class="courses-grid" role="list">
+    {% for course in courses %}
+      <a href="{% url 'course_detail' course.pk %}" class="course-card" role="listitem" tabindex="0">
+        <h5>{{ course.name }}</h5>
+      </a>
+    {% endfor %}
   </div>
+  {% else %}
+  <div class="no-courses">
+    Nenhum curso encontrado.
+  </div>
+  {% endif %}
+</div>
 
 {% endblock %}
