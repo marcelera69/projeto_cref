@@ -4,23 +4,62 @@
 
 {% block content %}
 <style>
+  .scroll-box {
+    max-height: 280px;
+    /* ajuste conforme necessário */
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+  }
+
+  .scroll-box::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scroll-box::-webkit-scrollbar-thumb {
+    background-color: #ced4da;
+    border-radius: 10px;
+  }
+
   .form-section-title {
     font-weight: 600;
     color: #0d6efd;
     margin-top: 2rem;
   }
+
   .form-card {
     max-width: 900px;
     margin: 0 auto;
   }
+
   .form-control:focus {
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
     border-color: #0d6efd;
   }
+
+  .btn-delete-course {
+    transition: all 0.3s ease;
+    border-width: 2px;
+    font-weight: 500;
+  }
+
+  .btn-delete-course:hover {
+    background-color: #dc3545;
+    color: white;
+    box-shadow: 0 0.4rem 1rem rgba(220, 53, 69, 0.3);
+  }
+
+  .btn-success {
+    transition: all 0.3s ease;
+  }
+
+  .btn-success:hover {
+    box-shadow: 0 0.4rem 1rem rgba(25, 135, 84, 0.3);
+  }
 </style>
 
-<div class="container pt-4 pb-1 bg-body-tertiary shadow-sm rounded-3 border" style="max-width: 950px;">
-  
+<div class="container pt-4 pb-5 bg-body-tertiary shadow-sm rounded-3 border" style="max-width: 950px;">
+
   <!-- Botão Voltar -->
   <div class="mb-3 btn-outline-danger">
     <a href="{% url 'course_detail' course.pk %}" class="btn btn-outline-danger">
@@ -30,7 +69,7 @@
 
   <!-- Card de formulário -->
   <div class="card form-card shadow-sm border">
-    <div class="card-body">
+    <div class="card-body ">
       <h2 class="text-primary mb-4">Editar Curso: {{ course.name }}</h2>
 
       <!-- Início do Formulário -->
@@ -79,41 +118,48 @@
         <!-- Alunos Matriculados -->
         <h5 class="form-section-title">Alunos Matriculados</h5>
         {% if students %}
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-              <thead class="table">
-                <tr>
-                    <th>Nome</th>
-                    <th>Matrícula</th>
-                    <th>Grupo</th>
-                    <th>Status</th>
-                    <th>Remover</th> <!-- Coluna de checkbox -->
-                </tr>
-              </thead>
-              <tbody>
-                {% for enrollment in students %}
-                  <tr>
-                      <td>{{ enrollment.student.name }}</td>
-                      <td>{{ enrollment.student.registration }}</td>
-                      <td>{{ enrollment.group.name }}</td>
-                      <td>{{ enrollment.get_status_display }}</td>
-                      <td class="text-center">
-                        <input type="checkbox" name="remover_alunos" value="{{ enrollment.student.id }}">
-                      </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+        <div class="table-responsive scroll-box">
+          <table class="table table-bordered align-middle mb-0">
+            <thead class="table">
+              <tr>
+                <th>Nome</th>
+                <th>Matrícula</th>
+                <th>Grupo</th>
+                <th>Status</th>
+                <th>Remover</th> <!-- Coluna de checkbox -->
+              </tr>
+            </thead>
+            <tbody>
+              {% for enrollment in students %}
+              <tr>
+                <td>{{ enrollment.student.name }}</td>
+                <td>{{ enrollment.student.registration }}</td>
+                <td>{{ enrollment.group.name }}</td>
+                <td>{{ enrollment.get_status_display }}</td>
+                <td class="text-center">
+                  <input type="checkbox" name="remover_alunos" value="{{ enrollment.student.id }}">
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
 
         {% else %}
-          <p class="text-muted">Nenhum aluno matriculado.</p>
+        <p class="text-muted">Nenhum aluno matriculado.</p>
         {% endif %}
 
         <!-- Botão Final -->
-        <div class="mt-4">
-          <button type="submit" class="btn btn-success w-100">Salvar alterações e aplicar mudanças</button>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <a href="{% url 'course_delete' course.pk %}" class="btn btn-outline-danger btn-delete-course">
+            <i class="bi bi-trash3"></i> Excluir Curso
+          </a>
+
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check2-circle"></i> Salvar alterações
+          </button>
         </div>
+
       </form>
     </div>
   </div>
