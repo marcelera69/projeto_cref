@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from Courses.models import Course
 from unidecode import unidecode
 from Courses.forms import CourseModelForm
-from django.shortcuts import redirect
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from Courses.models import Enrollment
+from django.shortcuts import redirect, get_object_or_404, redirect
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
+from Courses.models import Enrollment, Course, Student
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
 
 class CoursesListView(ListView):
     model = Course
@@ -39,8 +40,24 @@ class NewCourseView(CreateView):
     model = Course
     form_class = CourseModelForm
     template_name = 'new_course.html'
-    success_url = '/cursos/'
 
+    def get_success_url(self):
+        return reverse_lazy('course_add_student', kwargs={'pk': self.object.pk})
+
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class AddStudentsView(View):
+    def get(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        students = Student.objects.exclude(Enrollments_student__course=course)  # só alunos ainda não matriculados
+        return render(request, 'course_add_students.html', {'course': course, 'students': students})
+
+    def post(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        alunos_ids = request.POST.getlist('alunos')
+        for aluno_id in alunos_ids:
+            Enrollment.objects.create(course=course, student_id=aluno_id)
+        return redirect('course_detail', pk=course.pk)
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')

@@ -1,12 +1,96 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Novo Curso{% endblock %}
 
 {% block content %}
-    <h1>Formulario</h1>
-    <form method="POST" action="" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            {{form}}
-        </div>
-        <input type="submit" value="Cadastrar" class="btn btn-primary">
-    </form>
+<style>
+  .form-card {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #dee2e6;
+  }
+
+  .form-title {
+    font-weight: 700;
+    color: #0d6efd;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  label {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: #495057;
+  }
+
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  .btn-save {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-save:hover {
+    box-shadow: 0 0.5rem 1rem rgba(25, 135, 84, 0.3);
+  }
+</style>
+
+<div class="form-card">
+  <h2 class="form-title">Cadastrar Novo Curso</h2>
+  <form method="POST" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="row g-3">
+      <!-- Nome -->
+      <div class="col-md-6">
+        <label for="id_name">Nome do Curso</label>
+        {{ form.name|add_class:"form-control" }}
+      </div>
+
+      <!-- Datas -->
+      <div class="col-md-3">
+        <label for="id_start_date">Data de Início</label>
+        {{ form.start_date|add_class:"form-control" }}
+      </div>
+      <div class="col-md-3">
+        <label for="id_end_date">Data de Término</label>
+        {{ form.end_date|add_class:"form-control" }}
+      </div>
+
+      <!-- Descrição -->
+      <div class="col-12">
+        <label for="id_description">Descrição</label>
+        {{ form.description|add_class:"form-control" }}
+      </div>
+
+      <!-- Professores -->
+      <div class="col-md-6">
+        <label for="id_teachers">Professores</label>
+        {{ form.teachers|add_class:"form-select" }}
+      </div>
+
+      <!-- Tutores -->
+      <div class="col-md-6">
+        <label for="id_tutors">Tutores</label>
+        {{ form.tutors|add_class:"form-select" }}
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-success btn-save">
+        <i class="bi bi-check-circle"></i> Cadastrar Curso
+      </button>
+    </div>
+  </form>
+</div>
 {% endblock %}
