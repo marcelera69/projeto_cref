@@ -4,164 +4,353 @@
 
 {% block content %}
 <style>
-  .scroll-box {
-    max-height: 280px;
-    /* ajuste conforme necessário */
-    overflow-y: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
+  /* Fontes e Configuração Global */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f6f8fa;
+    color: #343a40;
   }
 
-  .scroll-box::-webkit-scrollbar {
-    width: 8px;
+  /* Container Principal */
+  .container {
+    max-width: 1200px;
+    margin-top: 5px;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 
-  .scroll-box::-webkit-scrollbar-thumb {
-    background-color: #ced4da;
-    border-radius: 10px;
+  /* Cabeçalho */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e1e4e8;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Adicionando flex-wrap para telas pequenas */
+  }
+
+  .header h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #007bff;
+    margin-bottom: 15px; /* Espaço entre o título e a busca em telas pequenas */
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    border-radius: 5px 0 5px 0;
+    width: 350px;
+    max-width: 100%;
+  }
+
+  .search-container input {
+    width: calc(100% - 40px); /* Ajuste para o ícone */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+  }
+
+  .search-container button {
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    /* Fazendo o ícone ficar dentro do campo */
+  }
+
+  .search-container button i {
+    font-size: 1.2rem;
+  }
+
+  .search-container button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Formulário de Edição */
+  .form-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #495057;
+  }
+
+  .form-control, .form-select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
   }
 
   .form-section-title {
+    font-size: 1.25rem;
+    color: #007bff;
+    margin-top: 1.5rem;
     font-weight: 600;
-    color: #0d6efd;
-    margin-top: 2rem;
   }
 
-  .form-card {
-    max-width: 900px;
-    margin: 0 auto;
+  /* Estilo da Tabela */
+  .table-responsive {
+    max-height: 350px;
+    overflow-y: auto;
+    margin-top: 20px;
   }
 
-  .form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-    border-color: #0d6efd;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
   }
 
-  .btn-delete-course {
-    transition: all 0.3s ease;
-    border-width: 2px;
-    font-weight: 500;
+  /* Botões */
+  .btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 400;
   }
 
-  .btn-delete-course:hover {
+  .btn-danger {
     background-color: #dc3545;
+    border: none;
     color: white;
-    box-shadow: 0 0.4rem 1rem rgba(220, 53, 69, 0.3);
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
   }
 
   .btn-success {
-    transition: all 0.3s ease;
+    background-color: #28a745;
+    border: none;
+    color: white;
   }
 
   .btn-success:hover {
-    box-shadow: 0 0.4rem 1rem rgba(25, 135, 84, 0.3);
+    background-color: #218838;
+  }
+
+  .btn-outline-primary {
+    background-color: transparent;
+    border: 1px solid #007bff;
+    color: #007bff;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem;
+    }
+
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .header h2 {
+      font-size: 1.5rem; /* Ajusta o tamanho do título em telas pequenas */
+      margin-bottom: 10px;
+    }
+
+    .search-container {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .table-responsive {
+      max-height: 250px;
+    }
+
+    .btn {
+      padding: 10px 20px; /* Ajusta o tamanho do botão em telas pequenas */
+    }
+
+    .btn-aluno{
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn-aluno a {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .btn-aluno div{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .btn-aluno > div a button{
+      width: 100%;
+    }
+      
   }
 </style>
 
-<div class="container pt-4 pb-5 bg-body-tertiary shadow-sm rounded-3 border" style="max-width: 950px;">
-
-  <!-- Botão Voltar -->
-  <div class="mb-3 btn-outline-danger">
-    <a href="{% url 'course_detail' course.pk %}" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Voltar
-    </a>
-  </div>
+<div class="container">
+  <!-- Cabeçalho -->
+  <div class="header">
+    <h2>Editar Curso: {{ course.name }}</h2>
 
   <!-- Card de formulário -->
-  <div class="card form-card shadow-sm border">
-    <div class="card-body ">
-      <h2 class="text-primary mb-4">Editar Curso: {{ course.name }}</h2>
+  <div class="form-card">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
 
-      <!-- Início do Formulário -->
-      <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-
-        <div class="row g-3">
-          <!-- Nome -->
-          <div class="col-md-6">
-            <label for="id_name" class="form-label">Nome do Curso</label>
-            {{ form.name|add_class:"form-control" }}
-          </div>
-
-          <!-- Datas -->
-          <div class="col-md-3">
-            <label for="id_start_date" class="form-label">Início</label>
-            {{ form.start_date|add_class:"form-control" }}
-          </div>
-          <div class="col-md-3">
-            <label for="id_end_date" class="form-label">Término</label>
-            {{ form.end_date|add_class:"form-control" }}
-          </div>
-
-          <!-- Descrição -->
-          <div class="col-12">
-            <label for="id_description" class="form-label">Descrição</label>
-            {{ form.description|add_class:"form-control" }}
-          </div>
-
-          <!-- Professores -->
-          <div class="col-md-6">
-            <label for="id_teachers" class="form-label">Professores</label>
-            {{ form.teachers|add_class:"form-select" }}
-          </div>
-
-          <!-- Tutores -->
-          <div class="col-md-6">
-            <label for="id_tutors" class="form-label">Tutores</label>
-            {{ form.tutors|add_class:"form-select" }}
-          </div>
+      <div class="row">
+        <!-- Nome do curso -->
+        <div class="col-md-6">
+          <label for="id_name" class="form-label">Nome do Curso</label>
+          {{ form.name|add_class:"form-control" }}
         </div>
 
-        <hr class="my-4">
-
-        <!-- Alunos Matriculados -->
-        <h5 class="form-section-title">Alunos Matriculados</h5>
-        {% if students %}
-        <div class="table-responsive scroll-box">
-          <table class="table table-bordered align-middle mb-0">
-            <thead class="table">
-              <tr>
-                <th>Nome</th>
-                <th>Matrícula</th>
-                <th>Grupo</th>
-                <th>Status</th>
-                <th>Remover</th> <!-- Coluna de checkbox -->
-              </tr>
-            </thead>
-            <tbody>
-              {% for enrollment in students %}
-              <tr>
-                <td>{{ enrollment.student.name }}</td>
-                <td>{{ enrollment.student.registration }}</td>
-                <td>{{ enrollment.group.name }}</td>
-                <td>{{ enrollment.get_status_display }}</td>
-                <td class="text-center">
-                  <input type="checkbox" name="remover_alunos" value="{{ enrollment.student.id }}">
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <!-- Datas -->
+        <div class="col-md-3">
+          <label for="id_start_date" class="form-label">Início</label>
+          {{ form.start_date|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+          <label for="id_end_date" class="form-label">Término</label>
+          {{ form.end_date|add_class:"form-control" }}
         </div>
 
-        {% else %}
-        <p class="text-muted">Nenhum aluno matriculado.</p>
-        {% endif %}
+        <!-- Descrição -->
+        <div class="col-12">
+          <label for="id_description" class="form-label">Descrição</label>
+          {{ form.description|add_class:"form-control" }}
+        </div>
 
-        <!-- Botão Final -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <a href="{% url 'course_delete' course.pk %}" class="btn btn-outline-danger btn-delete-course">
-            <i class="bi bi-trash3"></i> Excluir Curso
+        <!-- Professores -->
+        <div class="col-md-6">
+          <label for="id_teachers" class="form-label">Professores</label>
+          {{ form.teachers|add_class:"form-select" }}
+        </div>
+
+        <!-- Tutores -->
+        <div class="col-md-6">
+          <label for="id_tutors" class="form-label">Tutores</label>
+          {{ form.tutors|add_class:"form-select" }}
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Botão de adicionar aluno -->
+      <div class="btn-aluno d-flex justify-content-between align-items-center">
+        <a href="{% url 'course_add_student' course.pk %}" class="btn btn-outline-primary">
+          <i class="bi bi-person-plus"></i> Adicionar Alunos
+        </a>
+
+        <div>
+          <a href="{% url 'course_delete' course.pk %}" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Excluir Curso
           </a>
 
           <button type="submit" class="btn btn-success">
             <i class="bi bi-check2-circle"></i> Salvar alterações
           </button>
         </div>
-
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
+
+  <!-- Alunos Matriculados -->
+   <div class="w-100">
+     <h5 class="form-section-title">Alunos Matriculados</h5>
+     {% if students %}
+     <div class="table-responsive">
+      <table class="table table-striped table-bordered table-hover align-middle">
+        <thead class="table-primary">
+          <tr>
+            <th scope="col" class="text-center">Nome</th>
+            <th scope="col" class="text-center">Matrícula</th>
+            <th scope="col" class="text-center">Grupo</th>
+            <th scope="col" class="text-center">Status</th>
+            <th scope="col" class="text-center">Remover</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for enrollment in students %}
+          <tr>
+            <td class="text-center">{{ enrollment.student.name }}</td>
+            <td class="text-center">{{ enrollment.student.matricula }}</td>
+            <td class="text-center">{{ enrollment.group }}</td>
+            <td class="text-center">{{ enrollment.status }}</td>
+            <td class="text-center">
+              <input type="checkbox" name="remover_alunos" value="{{ enrollment.student.id }}" class="form-check-input">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+  </div>
+  {% else %}
+  <p>Não há alunos matriculados neste curso.</p>
+  {% endif %}
 </div>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<td class="text-center">
+            <input type="checkbox" name="remover_alunos" value="{{ enrollment.student.id }}">
+          </td>
