@@ -8,6 +8,7 @@ from Courses.models import Enrollment, Course, Student
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 
 class CoursesListView(ListView):
@@ -49,8 +50,23 @@ class NewCourseView(CreateView):
 class AddStudentsView(View):
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
-        students = Student.objects.exclude(Enrollments_student__course=course)  # só alunos ainda não matriculados
-        return render(request, 'course_add_students.html', {'course': course, 'students': students})
+        
+        # Base: alunos ainda não matriculados no curso
+        students = Student.objects.exclude(
+            Enrollments_student__course=course
+        )
+
+        # 🔍 Filtro por nome ou matrícula, se houver busca
+        query = request.GET.get('q')
+        if query:
+            students = students.filter(
+                Q(name__icontains=query) | Q(registration__icontains=query)
+            )
+
+        return render(request, 'course_add_students.html', {
+            'course': course,
+            'students': students,
+        })
 
     def post(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
