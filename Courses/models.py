@@ -57,6 +57,21 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+# Não entra na modelagem do siste, mas é usado para controlar o inventário de cursos
+# Criar dashboards futuros para controlar o inventário de cursos
+class CourseInventory(models.Model):
+    courses_count = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='inventories')
+    average_students_per_course = models.FloatField()
+    average_students_dropped_per_course = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Inventário de Cursos'
+        verbose_name_plural = 'Inventários de Cursos'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Cursos:{self.courses_count} - Media de alunos em cada curso:{self.average_students_per_course} - Media evadidos:{self.average_students_dropped_per_course}'
 
 class Module(models.Model):
     name = models.CharField(max_length=100)
