@@ -3,10 +3,7 @@ from django.dispatch import receiver
 from .models import Course, Enrollment
 
 
-
-
-@receiver(post_save, sender=Course)
-def course_post_save(sender, instance, **kwargs):
+def course_inventory_update():
     courses_count = Course.objects.all().count()
 
     # Pegando o número de alunos por curso
@@ -17,7 +14,7 @@ def course_post_save(sender, instance, **kwargs):
             average_students = sum_alunos_per_course / courses_count
         else:
             average_students = 0
-        
+
     # Atualizando os regisstros no modelo CourseInventory
     from .models import CourseInventory  
     CourseInventory.objects.create(
@@ -25,8 +22,13 @@ def course_post_save(sender, instance, **kwargs):
         average_students_per_course=average_students,
     )
 
+@receiver(post_save, sender=Course)
+def course_post_save(sender, instance, **kwargs):
+    # Atualiza o inventário de cursos após a criação ou atualização de um curso
+    course_inventory_update()
 
 
 @receiver(post_delete, sender=Course)
 def course_post_delete(sender, instance, **kwargs):
-    ...
+    # Atualiza o inventário de cursos após a exclusão de um curso
+    course_inventory_update()
