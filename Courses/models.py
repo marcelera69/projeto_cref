@@ -28,7 +28,7 @@ class Tutor(Person):
 
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=50)
     tutor = models.ForeignKey(Tutor, on_delete=models.PROTECT, related_name='tutors_groups', null=True, blank=False)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='courses', null=True, blank=False)
     

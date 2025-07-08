@@ -40,6 +40,7 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')
     search_fields = ('name',)
 
+@admin.register(Tutor)
 class TutorAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')
     search_fields = ('name',)
