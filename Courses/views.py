@@ -34,6 +34,17 @@ class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = self.get_object()
+
+        # Todos os enrollments relacionados ao curso, com student e group
+        enrollments = Enrollment.objects.filter(course=course).select_related('student__group')
+
+        # Contar quantos alunos não têm grupo associado
+        context['students_without_group_count'] = enrollments.filter(group__isnull=True).count()
+
+        return context
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
