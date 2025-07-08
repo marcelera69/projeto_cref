@@ -40,6 +40,9 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')
     search_fields = ('name',)
 
+class TutorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'email')
+    search_fields = ('name',)
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):

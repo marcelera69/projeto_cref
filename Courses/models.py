@@ -73,6 +73,7 @@ class CourseInventory(models.Model):
     def __str__(self):
         return f'Cursos:{self.courses_count} - Media de alunos em cada curso:{self.average_students_per_course} '
 
+
 class Module(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
