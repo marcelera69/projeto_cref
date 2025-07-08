@@ -73,6 +73,7 @@
   <div class="card shadow-sm border-0 card-hover">
     <div class="card-body">
       <h2 class="card-title text-primary">{{ object.name }}</h2>
+      <hr>
       <p><strong>Código:</strong> <span class="text-muted">CREF2025</span></p>
       <p>
         <strong>Duração:</strong>
@@ -82,7 +83,6 @@
         <em class="text-muted">Duração não definida</em>
         {% endif %}
       </p>
-      <p><strong>Total de alunos:</strong> {{ object.students.count }}</p>
       {% if object.description %}
       <p><strong>Descrição:</strong> {{ object.description }}</p>
       {% endif %}
@@ -135,7 +135,10 @@
   {% endif %}
 
   <!-- Alunos -->
-  <h4 class="section-title">Alunos Matriculados</h4>
+   <div class="section-title d-flex justify-content-between align-items-center">
+     <h4 >Alunos Matriculados</h4>
+      <h8 class="text-muted ">{{ object.students.count }} Alunos</h8>
+   </div>
   {% with enrollments=object.Enrollments_course.all %}
   {% if enrollments %}
     <div class="scroll-box mt-3 mb-4">
