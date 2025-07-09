@@ -226,7 +226,7 @@
           <a href="{% url 'course_dashboard' %}"
             class="{% if request.resolver_match.url_name == 'course_dashboard' %}active{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Painel de Cursos">
             <i class="bi bi-reception-4"></i>
-            <span>dashboard</span>
+            <span>Dashboards</span>
           </a>
           {% if user.is_authenticated %}
           <a href="{% url 'new_course' %}"
