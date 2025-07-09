@@ -2,5 +2,35 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1>Tela Dashboard</h1>
+    <div class="container py-5">
+        <h1 class="mb-4 text-primary fw-bold">Painel de Dashboard</h1>
+
+        <!-- Indicadores com fundo colorido -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+            <div class="bg-primary text-white p-4 rounded shadow-sm text-center">
+                <h4>Total de Cursos</h4>
+                <p class="fs-3 fw-bold">{{total_courses}}</p>
+            </div>
+            </div>
+            <div class="col-md-3">
+            <div class="bg-success text-white p-4 rounded shadow-sm text-center">
+                <h4>Total de Alunos</h4>
+                <p class="fs-3 fw-bold">{{total_students}}</p>
+            </div>
+            </div>
+            <div class="col-md-3">
+            <div class="bg-warning text-dark p-4 rounded shadow-sm text-center">
+                <h4>Total de Professores</h4>
+                <p class="fs-3 fw-bold">{{total_teachers}}</p>
+            </div>
+            </div>
+            <div class="col-md-3">
+            <div class="bg-danger text-white p-4 rounded shadow-sm text-center">
+                <h4>Tutores</h4>
+                <p class="fs-3 fw-bold">{{total_tutors}}</p>
+            </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

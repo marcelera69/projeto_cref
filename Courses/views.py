@@ -4,12 +4,11 @@ from unidecode import unidecode
 from Courses.forms import CourseModelForm
 from django.shortcuts import redirect, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
-from Courses.models import Enrollment, Course, Student
+from Courses.models import *
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Q
-from django.db.models import Count
 
 
 class CoursesListView(ListView):
@@ -139,14 +138,15 @@ class CourseDeleteView(DeleteView):
 
 @login_required(login_url='login')
 def course_dashboard_view(request):
-    cursos_totais = Course.objects.count()
-    alunos_totais = Student.objects.count()
-    status_agrupado = Enrollment.objects.values('status').annotate(qtd=Count('id'))
-
+    total_courses = Course.objects.count()
+    total_students = Student.objects.count()
+    total_teachers = Teacher.objects.count()
+    total_tutors = Tutor.objects.count()
     context = {
-        'cursos_totais': cursos_totais,
-        'alunos_totais': alunos_totais,
-        'status_agrupado': status_agrupado,
+        'total_courses': total_courses,
+        'total_students': total_students,
+        'total_teachers': total_teachers,
+        'total_tutors': total_tutors,
     }
     return render(request, 'course_dashboard.html', context)
 
