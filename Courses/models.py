@@ -57,6 +57,19 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+class HistoryAmountStudents(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='history_amount_students')
+    amount_students = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Histórico de Quantidade de Alunos'
+        verbose_name_plural = 'Históricos de Quantidade de Alunos'
+        ordering = ['-date']
+
+    def __str__(self):
+        return f'{self.course.name} - {self.amount_students} alunos - {self.date}'
+
 # Não entra na modelagem do siste, mas é usado para controlar o inventário de cursos
 # Criar dashboards futuros para controlar o inventário de cursos
 class CourseInventory(models.Model):
