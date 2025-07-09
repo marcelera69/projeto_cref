@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Q
+from django.db.models import Count
 
 
 class CoursesListView(ListView):
@@ -136,10 +137,17 @@ class CourseDeleteView(DeleteView):
 
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class CourseDashboardView(ListView):
-    model = Course
-    template_name = 'course_dashboard.html'
-    context_object_name = 'courses'
+@login_required(login_url='login')
+def course_dashboard_view(request):
+    cursos_totais = Course.objects.count()
+    alunos_totais = Student.objects.count()
+    status_agrupado = Enrollment.objects.values('status').annotate(qtd=Count('id'))
+
+    context = {
+        'cursos_totais': cursos_totais,
+        'alunos_totais': alunos_totais,
+        'status_agrupado': status_agrupado,
+    }
+    return render(request, 'course_dashboard.html', context)
 
     

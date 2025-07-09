@@ -32,5 +32,5 @@ urlpatterns = [
     path('cadastro/',register_view, name='register'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('dashboard/', CourseDashboardView.as_view(), name='course_dashboard'),
+    path('dashboard/', course_dashboard_view, name='course_dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
