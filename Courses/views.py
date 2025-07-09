@@ -30,6 +30,7 @@ class CoursesListView(ListView):
 
         return courses
     
+
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'course_detail.html'
@@ -47,6 +48,7 @@ class CourseDetailView(DetailView):
         return context
 
 
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class NewCourseView(CreateView):
     model = Course
@@ -55,6 +57,7 @@ class NewCourseView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('course_add_student', kwargs={'pk': self.object.pk})
+
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
@@ -85,6 +88,7 @@ class AddStudentsView(View):
         for aluno_id in alunos_ids:
             Enrollment.objects.create(course=course, student_id=aluno_id)
         return redirect('course_detail', pk=course.pk)
+
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
@@ -129,3 +133,13 @@ class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_delete.html'
     success_url = '/cursos/'
+
+
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class CourseDashboardView(ListView):
+    model = Course
+    template_name = 'course_dashboard.html'
+    context_object_name = 'courses'
+
+    
