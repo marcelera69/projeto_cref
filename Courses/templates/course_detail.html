@@ -63,7 +63,7 @@
     <a href="{% url 'courses_list' %}" class="btn btn-outline-primary">
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
-    {% if user.is_authenticated and user.is_staff %}
+    {% if user.is_authenticated %}
       <a href="{% url 'course_update' course.pk %}" class="btn btn-outline-primary">
         <i class="bi bi-pencil-square"></i> Editar Curso
       </a>
