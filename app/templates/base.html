@@ -218,15 +218,15 @@
     <div class="main-container">
       <aside class="sidebar" id="sidebar">
         <nav>
-          <a href="{% url 'courses_list' %}"
-            class="{% if request.resolver_match.url_name == 'courses_list' %}active{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Painel de Cursos">
-            <i class="bi bi-journal-text"></i>
-            <span>Painel de Cursos</span>
-          </a>
           <a href="{% url 'course_dashboard' %}"
             class="{% if request.resolver_match.url_name == 'course_dashboard' %}active{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboards">
             <i class="bi bi-reception-4"></i>
             <span>Dashboards</span>
+          </a>
+          <a href="{% url 'courses_list' %}"
+            class="{% if request.resolver_match.url_name == 'courses_list' %}active{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Painel de Cursos">
+            <i class="bi bi-journal-text"></i>
+            <span>Painel de Cursos</span>
           </a>
           {% if user.is_authenticated %}
           <a href="{% url 'new_course' %}"
