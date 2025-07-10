@@ -138,14 +138,30 @@ class CourseDeleteView(DeleteView):
     success_url = '/cursos/'
 
 
-def graph_students_per_course():
-    x=[1, 2, 3, 4, 5]
-    y=[10, 20, 30, 40, 50]
+def graph_average_students_per_course():
+    #Pegar dados ordenados da CourseInventory
+    data = CourseInventory.objects.all().order_by('-created_at')
 
-    fig = go.Figure(data=go.Scatter(x=y, y=y, mode='markers+lines'))
-    fig.update_layout(title='Alunos por Curso',
-                      xaxis_title='Cursos',
-                      yaxis_title='Número de Alunos')
+    #separer em listas para o campo x e y
+    if not data:
+        # Se não houver dados, retornar gráfico vazio
+        return plot(go.Figure(), output_type='div', include_plotlyjs=False)
+    else:
+        dates = []
+        averages = []
+        for item in data:
+            dates.append(item.created_at.strftime('%Y-%m-%d'))
+            averages.append(item.average_students_per_course)
+
+    # Criar o gráfico
+    fig = go.Figure(data=go.Scatter(x=dates, y=averages, mode='markers+lines'))
+    fig.update_layout(title='',
+                      xaxis_title='Data',
+                      yaxis_title='Média de Alunos',
+                        xaxis=dict(tickangle=-45),
+                        yaxis=dict(tickformat='d'),  # força a exibir números inteiros no eixo y
+                        margin=dict(l=40, r=40, t=50, b=100)
+                      )
     
     grafico_html = plot(fig, output_type='div', include_plotlyjs=False)
     
@@ -160,7 +176,7 @@ def course_dashboard_view(request):
     total_tutors = Tutor.objects.count()
 
     # Gerar o gráfico de alunos por curso
-    graph_history_studants = graph_students_per_course()
+    graph_history_studants = graph_average_students_per_course()
 
     context = {
         'total_courses': total_courses,
