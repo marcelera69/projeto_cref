@@ -2,48 +2,82 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="mb-4 text-primary fw-bold">Painel de Dashboard</h1>
-        <p class="lead mb-4">Bem-vindo ao painel de controle do sistema de cursos. Aqui você pode visualizar informações importantes sobre os cursos, alunos, professores e tutores.</p>
-
-
-        <!-- Grafico do histórico de alunos por curso-->
-        {% if graph_history_studants %}
-            <div class="mb-4 container bg-body-tertiary shadow-sm rounded-4 border">
-                <h2 class="ms-3 fw-bold text-primary">Média de Alunos por Curso</h2>
-                <div class="px-4">
-                    {{ graph_history_studants|safe }}
-                </div>
-            </div>
-        {% endif %}
-
-
-        <!-- Indicadores com fundo colorido -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-            <div class="bg-primary text-white p-4 rounded shadow-sm text-center">
-                <h4>Total de Cursos</h4>
-                <p class="fs-3 fw-bold">{{total_courses}}</p>
-            </div>
-            </div>
-            <div class="col-md-3">
-            <div class="bg-success text-white p-4 rounded shadow-sm text-center">
-                <h4>Total de Alunos</h4>
-                <p class="fs-3 fw-bold">{{total_students}}</p>
-            </div>
-            </div>
-            <div class="col-md-3">
-            <div class="bg-warning text-dark p-4 rounded shadow-sm text-center">
-                <h4>Total de Professores</h4>
-                <p class="fs-3 fw-bold">{{total_teachers}}</p>
-            </div>
-            </div>
-            <div class="col-md-3">
-            <div class="bg-danger text-white p-4 rounded shadow-sm text-center">
-                <h4>Tutores</h4>
-                <p class="fs-3 fw-bold">{{total_tutors}}</p>
-            </div>
-            </div>
-        </div>
+<div class="container-fluid px-4 py-5" style="max-width: 1280px;">
+  <!-- Navbar (substitua pela sua navbar principal se quiser) -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm rounded-3 mb-5 sticky-top" style="top: 1rem; z-index: 1030;">
+    <div class="container-fluid px-3">
+      <a class="navbar-brand fw-bold fs-3 text-primary" href="#">Dashboard</a>
+      <button class="btn btn-outline-primary d-none d-lg-inline-block">Atualizar dados</button>
     </div>
+  </nav>
+
+  <!-- Cards de métricas principais -->
+  <div class="row g-4 mb-5">
+    {% comment %} Card template {% endcomment %}
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+        <div class="icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
+          <i class="bi bi-journal-bookmark-fill"></i>
+        </div>
+        <div>
+          <h6 class="text-muted mb-1">Total de Cursos</h6>
+          <h3 class="fw-bold mb-0">{{ total_courses }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+        <div class="icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div>
+          <h6 class="text-muted mb-1">Total de Alunos</h6>
+          <h3 class="fw-bold mb-0">{{ total_students }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+        <div class="icon bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
+          <i class="bi bi-person-badge-fill"></i>
+        </div>
+        <div>
+          <h6 class="text-muted mb-1">Total de Professores</h6>
+          <h3 class="fw-bold mb-0">{{ total_teachers }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+        <div class="icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
+          <i class="bi bi-person-check-fill"></i>
+        </div>
+        <div>
+          <h6 class="text-muted mb-1">Tutores</h6>
+          <h3 class="fw-bold mb-0">{{ total_tutors }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico principal -->
+  <section class="bg-white rounded-4 shadow-sm p-4 mb-5" style="min-height: 420px;">
+    <h2 class="fw-bold mb-4 text-primary">Média de Alunos por Curso</h2>
+    <div class="h-100 d-flex align-items-center justify-content-center">
+      {% if graph_history_studants %}
+        {{ graph_history_studants|safe }}
+      {% else %}
+        <p class="text-muted fst-italic">Gráfico indisponível no momento.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Rodapé / resumo opcional -->
+  <footer class="text-center text-muted mb-5">
+    <small>© 2025 Sistema de Controle de Evasão. Todos os direitos reservados.</small>
+  </footer>
+</div>
 {% endblock %}
