@@ -9,9 +9,9 @@
 
         <!-- Grafico do histórico de alunos por curso-->
         {% if graph_history_studants %}
-            <div class="mb-4">
-                <h2 class="text-secondary">Histórico de Alunos por Curso</h2>
-                <div>
+            <div class="mb-4 container bg-body-tertiary shadow-sm rounded-4 border">
+                <h2 class="ms-3 fw-bold text-primary">Média de Alunos por Curso</h2>
+                <div class="px-4">
                     {{ graph_history_studants|safe }}
                 </div>
             </div>
