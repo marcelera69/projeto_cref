@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
-from Courses.models import Course
 from unidecode import unidecode
-from Courses.forms import CourseModelForm
 from django.shortcuts import redirect, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
-from Courses.models import *
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Q
+#Importações de modelos e formulários dos meus próprios arquivos
+from Courses.models import *
+from Courses.forms import CourseModelForm
+#Importações necessárias Para o dashboard
+from plotly.offline import plot
+import plotly.graph_objects as go
 
 
 class CoursesListView(ListView):
@@ -135,18 +138,36 @@ class CourseDeleteView(DeleteView):
     success_url = '/cursos/'
 
 
+def graph_students_per_course():
+    x=[1, 2, 3, 4, 5]
+    y=[10, 20, 30, 40, 50]
 
-@login_required(login_url='login')
+    fig = go.Figure(data=go.Scatter(x=y, y=y, mode='markers+lines'))
+    fig.update_layout(title='Alunos por Curso',
+                      xaxis_title='Cursos',
+                      yaxis_title='Número de Alunos')
+    
+    grafico_html = plot(fig, output_type='div', include_plotlyjs=False)
+    
+    return grafico_html
+
+
+#@login_required(login_url='login')
 def course_dashboard_view(request):
     total_courses = Course.objects.count()
     total_students = Student.objects.count()
     total_teachers = Teacher.objects.count()
     total_tutors = Tutor.objects.count()
+
+    # Gerar o gráfico de alunos por curso
+    graph_history_studants = graph_students_per_course()
+
     context = {
         'total_courses': total_courses,
         'total_students': total_students,
         'total_teachers': total_teachers,
         'total_tutors': total_tutors,
+        'graph_history_studants': graph_history_studants,
     }
     return render(request, 'course_dashboard.html', context)
 

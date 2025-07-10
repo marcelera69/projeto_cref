@@ -211,8 +211,8 @@
       z-index: 1050;
     }
   </style>
+  <script src="https://cdn.plot.ly/plotly-2.30.1.min.js"></script>
 </head>
-
 <body>
   <div class="wrapper">
     <div class="main-container">
@@ -296,45 +296,44 @@
 
     </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('sidebarToggle');
 
-  // Carrega o estado salvo da sidebar ao iniciar
-  document.addEventListener('DOMContentLoaded', function () {
-    const savedState = localStorage.getItem('sidebarState');
+      // Carrega o estado salvo da sidebar ao iniciar
+      document.addEventListener('DOMContentLoaded', function () {
+        const savedState = localStorage.getItem('sidebarState');
 
-    if (savedState === 'collapsed') {
-      sidebar.classList.add('collapsed');
-      document.body.classList.add('sidebar-collapsed');
-      toggleBtn.classList.add('collapsed');
-    } else {
-      sidebar.classList.remove('collapsed');
-      document.body.classList.remove('sidebar-collapsed');
-      toggleBtn.classList.remove('collapsed');
-    }
-
-    // Inicializar tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-
-    tooltipTriggerList.forEach(function (el) {
-      const tooltip = new bootstrap.Tooltip(el, {
-        trigger: 'manual'
-      });
-
-      el.addEventListener('mouseenter', () => {
-        if (sidebar.classList.contains('collapsed')) {
-          tooltip.show();
+        if (savedState === 'collapsed') {
+          sidebar.classList.add('collapsed');
+          document.body.classList.add('sidebar-collapsed');
+          toggleBtn.classList.add('collapsed');
+        } else {
+          sidebar.classList.remove('collapsed');
+          document.body.classList.remove('sidebar-collapsed');
+          toggleBtn.classList.remove('collapsed');
         }
-      });
 
-      el.addEventListener('mouseleave', () => {
-        tooltip.hide();
+        // Inicializar tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+
+        tooltipTriggerList.forEach(function (el) {
+          const tooltip = new bootstrap.Tooltip(el, {
+            trigger: 'manual'
+          });
+
+          el.addEventListener('mouseenter', () => {
+            if (sidebar.classList.contains('collapsed')) {
+              tooltip.show();
+            }
+          });
+
+          el.addEventListener('mouseleave', () => {
+            tooltip.hide();
+          });
+        });
       });
-    });
-  });
 
       // Alternar sidebar e salvar o estado
       toggleBtn.addEventListener('click', () => {
@@ -346,6 +345,7 @@
       });
 
   </script>
+{% block extra_scripts %}{% endblock %}
 </body>
 
 </html>

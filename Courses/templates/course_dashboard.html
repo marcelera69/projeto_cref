@@ -4,6 +4,19 @@
 {% block content %}
     <div class="container py-5">
         <h1 class="mb-4 text-primary fw-bold">Painel de Dashboard</h1>
+        <p class="lead mb-4">Bem-vindo ao painel de controle do sistema de cursos. Aqui você pode visualizar informações importantes sobre os cursos, alunos, professores e tutores.</p>
+
+
+        <!-- Grafico do histórico de alunos por curso-->
+        {% if graph_history_studants %}
+            <div class="mb-4">
+                <h2 class="text-secondary">Histórico de Alunos por Curso</h2>
+                <div>
+                    {{ graph_history_studants|safe }}
+                </div>
+            </div>
+        {% endif %}
+
 
         <!-- Indicadores com fundo colorido -->
         <div class="row g-4 mb-4">
