@@ -84,10 +84,11 @@
           <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center">
               {{ course.name }}
-              <span class="badge bg-primary rounded-pill">09/07/2025</span>
-            
+              <span class="badge bg-primary rounded-pill"> {{course.created_at}} </span>
           </ul>
         {% endfor %}
+      {% else %}
+        <p class="text-muted">Nenhum curso criado recentemente.</p>
       {% endif %}
   </div>
 

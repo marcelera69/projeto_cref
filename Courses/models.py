@@ -48,6 +48,7 @@ class Course(models.Model):
     teachers = models.ManyToManyField(Teacher, related_name='teacher_courses', blank=True)
     tutors = models.ManyToManyField(Tutor, related_name='teacher_courses', null=True, blank=True)
     students = models.ManyToManyField('Student', through='Enrollment', blank=True )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def duration(self):
         if self.start_date and self.end_date:
