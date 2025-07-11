@@ -174,9 +174,11 @@ def course_dashboard_view(request):
     total_students = Student.objects.count()
     total_teachers = Teacher.objects.count()
     total_tutors = Tutor.objects.count()
-
+    
     # Gerar o gráfico de alunos por curso
     graph_history_studants = graph_average_students_per_course()
+
+    latest_courses = Course.objects.order_by('-id')[:2]
 
     context = {
         'total_courses': total_courses,
@@ -184,6 +186,7 @@ def course_dashboard_view(request):
         'total_teachers': total_teachers,
         'total_tutors': total_tutors,
         'graph_history_studants': graph_history_studants,
+        'latest_courses': latest_courses,
     }
     return render(request, 'course_dashboard.html', context)
 

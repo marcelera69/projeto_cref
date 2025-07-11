@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container-fluid px-4 py-5" style="max-width: 1280px;">
   <!-- Navbar (substitua pela sua navbar principal se quiser) -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm rounded-3 mb-5 sticky-top" style="top: 1rem; z-index: 1030;">
+  <nav class="navbar  navbar-light bg-white shadow-sm rounded-3 border mb-6" style="margin-bottom: 30px;">
     <div class="container-fluid px-3">
       <a class="navbar-brand fw-bold fs-3 text-primary" href="#">Dashboard</a>
       <button class="btn btn-outline-primary d-none d-lg-inline-block">Atualizar dados</button>
@@ -12,10 +12,10 @@
   </nav>
 
   <!-- Cards de métricas principais -->
-  <div class="row g-4 mb-5">
+  <div class="row g-4 mb-5 ">
     {% comment %} Card template {% endcomment %}
-    <div class="col-12 col-md-6 col-xl-3">
-      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+    <div class="col-12 col-md-6 col-xl-3 ">
+      <div class="card shadow-sm border rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
         <div class="icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
           <i class="bi bi-journal-bookmark-fill"></i>
         </div>
@@ -27,7 +27,7 @@
     </div>
 
     <div class="col-12 col-md-6 col-xl-3">
-      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+      <div class="card shadow-sm border rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
         <div class="icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
           <i class="bi bi-people-fill"></i>
         </div>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="col-12 col-md-6 col-xl-3">
-      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+      <div class="card shadow-sm border rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
         <div class="icon bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
           <i class="bi bi-person-badge-fill"></i>
         </div>
@@ -51,7 +51,7 @@
     </div>
 
     <div class="col-12 col-md-6 col-xl-3">
-      <div class="card shadow-sm border-0 rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
+      <div class="card shadow-sm border rounded-4 p-4 d-flex flex-row align-items-center gap-3 bg-white">
         <div class="icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; font-size: 28px;">
           <i class="bi bi-person-check-fill"></i>
         </div>
@@ -64,8 +64,9 @@
   </div>
 
   <!-- Gráfico principal -->
-  <section class="bg-white rounded-4 shadow-sm p-4 mb-5" style="min-height: 420px;">
+  <section class="bg-white rounded-4 shadow-sm border p-4 mb-5" style="min-height: 420px;">
     <h2 class="fw-bold mb-4 text-primary">Média de Alunos por Curso</h2>
+    <hr>
     <div class="h-100 d-flex align-items-center justify-content-center">
       {% if graph_history_studants %}
         {{ graph_history_studants|safe }}
@@ -74,6 +75,21 @@
       {% endif %}
     </div>
   </section>
+
+  <!-- Últimos cursos criados -->
+  <div class="bg-white p-4 mb-4 rounded shadow-sm border">
+    <h5 class="text-primary fw-bold mb-3">Últimos Cursos Criados</h5>
+    {% if latest_courses %}
+        {% for course in latest_courses %}
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ course.name }}
+              <span class="badge bg-primary rounded-pill">09/07/2025</span>
+            
+          </ul>
+        {% endfor %}
+      {% endif %}
+  </div>
 
   <!-- Rodapé / resumo opcional -->
   <footer class="text-center text-muted mb-5">
