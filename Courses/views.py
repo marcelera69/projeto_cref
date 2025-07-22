@@ -6,9 +6,11 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Q
+
 #Importações de modelos e formulários dos meus próprios arquivos
 from Courses.models import *
-from Courses.forms import CourseModelForm
+from Courses.forms import CourseModelForm, ModuleModelForm
+
 #Importações necessárias Para o dashboard
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -190,4 +192,25 @@ def course_dashboard_view(request):
     }
     return render(request, 'course_dashboard.html', context)
 
-    
+
+def course_module_view(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+
+    if request.method == 'POST':
+        form = ModuleModelForm(request.POST)
+        if form.is_valid():
+            module = form.save(commit=False)
+            module.course = course  # vincula o módulo ao curso
+            module.save()
+            return redirect('course_modules', pk=pk)
+    else:
+        form = ModuleModelForm(initial={'course': course})
+
+    modules = Module.objects.filter(course=course).order_by('name')
+
+    context = {
+        'course': course,
+        'modules': modules if modules.exists() else None,
+        'form': form,
+    }
+    return render(request, 'course_modules.html', context)
