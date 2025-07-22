@@ -33,4 +33,5 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('dashboard/', course_dashboard_view, name='course_dashboard'),
+    path('cursos/<int:pk>/modulos/', course_module_view, name='course_modules'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

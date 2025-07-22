@@ -1,6 +1,6 @@
 from django import forms
-from Courses.models import Course
-    
+from Courses.models import Course, Module
+
 class CourseModelForm(forms.ModelForm):
     class Meta:
         model = Course
@@ -21,3 +21,17 @@ class CourseModelForm(forms.ModelForm):
             raise forms.ValidationError("A data de início não pode ser posterior à data de término.")
 
         return end_date
+
+class ModuleModelForm(forms.ModelForm):
+    class Meta:
+        model = Module
+        fields = ['name', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={'placeholder': 'Enter module description'}),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name:
+            raise forms.ValidationError("O nome do módulo é obrigatório.")
+        return name
