@@ -214,3 +214,25 @@ def course_module_view(request, pk):
         'form': form,
     }
     return render(request, 'course_modules.html', context)
+
+
+class ModuleDetailView(DetailView):
+    model = Module
+    template_name = 'course_module_detail.html'
+
+    def get_object(self, queryset =None):
+        course_pk = self.kwargs.get('pk')
+        module_pk = self.kwargs.get('module_pk')
+        return get_object_or_404(Module, pk=module_pk, course__pk=course_pk)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        module = self.get_object()
+        course = module.course
+
+        # Obter alunos associados ao módulo
+        students_module = module.students.all() 
+
+        context['course'] = course
+        context['students_module'] = students_module
+        return context
