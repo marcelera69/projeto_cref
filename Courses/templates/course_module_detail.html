@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Detalhes do Módulo{% endblock %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <h1>{{ module.name }}</h1>
+    {% if module.description %}
+        <p>{{ module.description }}</p>
+    {% else %}
+        <p>Descrição não disponível.</p>
+    {% endif %}
+
+    <h2>Alunos do Módulo</h2>
+    <ul>
+    {% for student in students_module %}
+        <li>
+            <strong>{{ student.name }}</strong> - 
+            {% if student.completed %}
+                <span style="color: green;">Concluído</span>
+            {% else %}
+                <span style="color: red;">Pendente</span>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>Nenhum aluno inscrito neste módulo.</li>
+    {% endfor %}
+{% endblock %}
