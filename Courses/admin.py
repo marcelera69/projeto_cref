@@ -6,10 +6,9 @@ class ModuleInline(admin.TabularInline):
     model = Module
     extra = 0
     autocomplete_fields = ['teachers']
-    fields = ('name', 'description', 'number_classes', 'teachers')
+    fields = ('name', 'description', 'number_classes', 'teachers', 'students')
     readonly_fields = ('number_classes',)
     ordering = ('name',)
-    search_fields = ('name',)
 
 #Classe para usar o modelo Enrollment como inline no admin do Course
 class EnrollmentInline(admin.TabularInline):

@@ -94,6 +94,7 @@ class Module(models.Model):
     number_classes = models.IntegerField(default=0, blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
     teachers = models.ManyToManyField(Teacher, related_name='teacher_modules', blank=True, null=True)
+    students = models.ManyToManyField(Student, related_name='student_modules', blank=True, null=True)
     
 
 
