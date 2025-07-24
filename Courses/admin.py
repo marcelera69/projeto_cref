@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Courses.models import Student, Teacher, Tutor, Group, Course, Module, Enrollment
+from Courses.models import Student, Teacher, Tutor, Group, Course, Module, Enrollment, Activity, ActivityHasStudents
 
 
 class ModuleInline(admin.TabularInline):
@@ -25,7 +25,23 @@ class CourseAdmin(admin.ModelAdmin):
     ordering = ('name',)
     inlines = [EnrollmentInline, ModuleInline]
     
-    
+
+class ActivityHasStudentsInline(admin.TabularInline):
+    model = ActivityHasStudents
+    extra = 0
+    autocomplete_fields = ['student']
+    fields = ('activity', 'student', 'completed')
+    ordering = ('student',)
+
+@admin.register(Activity)
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('title', 'module', 'completed')
+    search_fields = ('title',)
+    list_filter = ('module', 'student', 'completed')
+    ordering = ('module', 'title')
+    inlines = [ActivityHasStudentsInline]
+
+
 @admin.register(Student)
 class StudentsAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')
@@ -48,5 +64,7 @@ class TutorAdmin(admin.ModelAdmin):
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'tutor__name')
     search_fields = ('name', 'tutor',)
+
+
 
 
