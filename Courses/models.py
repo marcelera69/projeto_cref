@@ -96,18 +96,27 @@ class Module(models.Model):
     teachers = models.ManyToManyField(Teacher, related_name='teacher_modules', blank=True, null=True)
     students = models.ManyToManyField(Student, related_name='student_modules', blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Activity(models.Model):
     title = models.CharField(max_length=100)
-    completed = models.BooleanField(default=False)
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='activities')
     student = models.ManyToManyField(Student, through='ActivityHasStudents', blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 class ActivityHasStudents(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.activity.title} - {self.student.name}'
+
 
 
 class Enrollment(models.Model):

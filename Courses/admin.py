@@ -35,9 +35,9 @@ class ActivityHasStudentsInline(admin.TabularInline):
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('title', 'module', 'completed')
+    list_display = ('title', 'module',)
     search_fields = ('title',)
-    list_filter = ('module', 'student', 'completed')
+    list_filter = ('module', 'student',)
     ordering = ('module', 'title')
     inlines = [ActivityHasStudentsInline]
 
