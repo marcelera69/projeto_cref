@@ -220,19 +220,37 @@ class ModuleDetailView(DetailView):
     model = Module
     template_name = 'course_module_detail.html'
 
-    def get_object(self, queryset =None):
+    def get_object(self, queryset=None):
         course_pk = self.kwargs.get('pk')
         module_pk = self.kwargs.get('module_pk')
         return get_object_or_404(Module, pk=module_pk, course__pk=course_pk)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         module = self.get_object()
         course = module.course
+        students = module.students.all()
+        atividades = module.activities.all()
 
-        # Obter alunos associados ao módulo
-        students_module = module.students.all() 
+        alunos_com_atividades = []
 
-        context['course'] = course
-        context['students_module'] = students_module
+        for aluno in students:
+            status_atividades = []
+            for atividade in atividades:
+                relacao = ActivityHasStudents.objects.filter(activity=atividade, student=aluno).first()
+                status_atividades.append({
+                    'atividade': atividade,
+                    'concluida': relacao.completed if relacao else False
+                })
+            alunos_com_atividades.append({
+                'aluno': aluno,
+                'atividades': status_atividades
+            })
+
+        context.update({
+            'course': course,
+            'module': module,
+            'atividades': atividades,
+            'alunos_com_atividades': alunos_com_atividades,
+        })
         return context
