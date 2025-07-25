@@ -46,7 +46,7 @@ class Course(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     teachers = models.ManyToManyField(Teacher, related_name='teacher_courses', blank=True)
-    tutors = models.ManyToManyField(Tutor, related_name='teacher_courses', null=True, blank=True)
+    tutors = models.ManyToManyField(Tutor, related_name='teacher_courses', blank=True)
     students = models.ManyToManyField('Student', through='Enrollment', blank=True )
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -93,8 +93,8 @@ class Module(models.Model):
     description = models.TextField(blank=True, null=True)
     number_classes = models.IntegerField(default=0, blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
-    teachers = models.ManyToManyField(Teacher, related_name='teacher_modules', blank=True, null=True)
-    students = models.ManyToManyField(Student, related_name='student_modules', blank=True, null=True)
+    teachers = models.ManyToManyField(Teacher, related_name='teacher_modules', blank=True)
+    students = models.ManyToManyField(Student, related_name='student_modules', blank=True)
 
     def __str__(self):
         return self.name
