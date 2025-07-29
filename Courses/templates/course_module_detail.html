@@ -18,6 +18,10 @@
               <tr>
                 <th>Aluno</th>
                 <th>Matrícula</th>
+                {% if module.media_conclusao %}
+                  <th>Média de Conclusão</th>
+                {% endif %}
+                <th>Conclusão</th>
                 {% for atividade in atividades %}
                   <th>{{ atividade.title }}</th>
                 {% endfor %}
@@ -28,6 +32,7 @@
                 <tr>
                   <td class="text-start fw-semibold">{{ item.aluno.name }}</td>
                   <td>{{ item.aluno.code }}</td>
+                  <td>{{ item.media_conclusao }}%</td>
                   {% for atv in item.atividades %}
                     <td>
                       {% if atv.concluida %}
