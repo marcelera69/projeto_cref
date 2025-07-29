@@ -244,7 +244,8 @@ class ModuleDetailView(DetailView):
                 })
             alunos_com_atividades.append({
                 'aluno': aluno,
-                'atividades': status_atividades
+                'atividades': status_atividades,
+                'media_conclusao': (sum(1 for atv in status_atividades if atv['concluida']) / len(status_atividades) if status_atividades else 0) * 100,
             })
 
         context.update({
@@ -254,3 +255,4 @@ class ModuleDetailView(DetailView):
             'alunos_com_atividades': alunos_com_atividades,
         })
         return context
+    
