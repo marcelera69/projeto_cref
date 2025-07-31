@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationRequestForm
-import smtplib
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -50,7 +50,7 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-from email.message import EmailMessage
+
 def registration_request_view(request):
     if request.method == 'POST':
         form = RegistrationRequestForm(request.POST)
@@ -59,18 +59,32 @@ def registration_request_view(request):
             #Enviar email de solicitação de cadastro
             sender = 'centrodereferencia.iff@gmail.com'
             recipient = 'ceeloalves.curso@gmail.com'
-            message = f'Novo cadastro solicitado:\nUsuario: {form.cleaned_data["registration"]}\nSenha: {12345678}'
-            print(message)
+            message = f"""
+            Olá,
 
-            servidor_email = smtplib.SMTP('smtp.gmail.com', 587)
-            servidor_email.starttls()
-            servidor_email.login('centrodereferencia.iff@gmail.com', 'bdgp aern bmbj qgiv')
-            servidor_email.sendmail(
-                sender,
-                [recipient],
-                message
-            )
+            Uma nova solicitação de cadastro foi registrada no sistema.
+
+            📌 Detalhes da solicitação:
+            - Nome completo: {form.cleaned_data.get("name")}
+            - Matrícula: {form.cleaned_data.get("registration")}
+            - E-mail informado: {form.cleaned_data.get("email")}
+            - Data/Hora da solicitação: {form.cleaned_data.get("created_at")}
+
+            Por favor, acesse o painel de administração para aprovar ou recusar esta solicitação.
+
+            Atenciosamente,  
+            Sistema de Controle de Evasão do CREF.
+            """
+
+            
+            send_mail('Novo Cadastro Solicitado',
+                      message,
+                      sender,
+                      [recipient],
+                     )
+
             return redirect('courses_list')
+
     else:
         form = RegistrationRequestForm()
     return render(request, 'registration_request.html', {'form': form})
