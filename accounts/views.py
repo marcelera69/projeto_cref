@@ -51,7 +51,7 @@ def logout_view(request):
     return redirect('login')
 
 
-def solicitar_registro(request):
+def registration_request_view(request):
     if request.method == 'POST':
         form = RegistrationRequestForm(request.POST)
         if form.is_valid():
@@ -59,4 +59,4 @@ def solicitar_registro(request):
             return redirect('courses_list')
     else:
         form = RegistrationRequestForm()
-    return render(request, 'solicitacao_registro.html', {'form': form})
+    return render(request, 'registration_request.html', {'form': form})

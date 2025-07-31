@@ -7,12 +7,6 @@ class RegistrationRequestForm(forms.ModelForm):
         model = RegistrationRequest
         fields = ['name', 'email', 'registration']
 
-        widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Digite seu nome'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Digite seu email'}),
-            'registration': forms.NumberInput(attrs={'placeholder': 'Digite seu número de matrícula'}),
-        }
-
     def clean_registration(self):
         registration = self.cleaned_data.get('registration')
         created_date = self.cleaned_data.get('created_at')
