@@ -18,7 +18,7 @@ class RegistrationRequestForm(forms.ModelForm):
             registration=registration, 
             created_at__gte=limite
         ).exists():
-            raise forms.ValidationError("Você já fez uma requisição nas últimas 24 horas com este número de matrícula.")
+            raise forms.ValidationError("Você já fez uma requisição nas últimas 24 horas com este número de matrícula, aguarde sua solicitação ser aprovada.")
 
         if registration and not registration.isdigit():
             raise forms.ValidationError("O número de matrícula deve conter apenas dígitos.")

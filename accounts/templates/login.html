@@ -1,3 +1,5 @@
+
+{% load widget_tweaks %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br" data-bs-theme="light" class="h-100">
@@ -112,8 +114,12 @@
         <label for="id_password" class="form-label">Senha</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-          {{ form.password }}
+          {{ form.password|add_class:"w-90" }}
         </div>
+      </div>
+
+      <div class="mb-3">
+        <a class="" href="{% url 'registration_request' %}">Não tem cadastro? Solicite aqui</a>
       </div>
 
       <div class="d-grid">

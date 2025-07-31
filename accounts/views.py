@@ -50,12 +50,26 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-
+from email.message import EmailMessage
 def registration_request_view(request):
     if request.method == 'POST':
         form = RegistrationRequestForm(request.POST)
         if form.is_valid():
             form.save()
+            #Enviar email de solicitação de cadastro
+            sender = 'centrodereferencia.iff@gmail.com'
+            recipient = 'ceeloalves.curso@gmail.com'
+            message = f'Novo cadastro solicitado:\nUsuario: {form.cleaned_data["registration"]}\nSenha: {12345678}'
+            print(message)
+
+            servidor_email = smtplib.SMTP('smtp.gmail.com', 587)
+            servidor_email.starttls()
+            servidor_email.login('centrodereferencia.iff@gmail.com', 'bdgp aern bmbj qgiv')
+            servidor_email.sendmail(
+                sender,
+                [recipient],
+                message
+            )
             return redirect('courses_list')
     else:
         form = RegistrationRequestForm()
