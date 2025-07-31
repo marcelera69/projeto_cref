@@ -106,7 +106,7 @@
         <label for="id_username" class="form-label">Usuário</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-          {{ form.username }}
+          {{ form.username|add_class:"form-control" }}
         </div>
       </div>
 
@@ -114,7 +114,7 @@
         <label for="id_password" class="form-label">Senha</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-          {{ form.password|add_class:"w-90" }}
+          {{ form.password|add_class:"form-control"}}
         </div>
       </div>
 
