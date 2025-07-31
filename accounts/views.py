@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationRequestForm
 from django.core.mail import send_mail
-
+from django.utils import timezone
 # Create your views here.
 
 def register_view(request):
@@ -51,6 +51,7 @@ def logout_view(request):
     return redirect('login')
 
 
+from django.utils.timezone import localtime
 def registration_request_view(request):
     if request.method == 'POST':
         form = RegistrationRequestForm(request.POST)
@@ -68,7 +69,7 @@ def registration_request_view(request):
             - Nome completo: {form.cleaned_data.get("name")}
             - Matrícula: {form.cleaned_data.get("registration")}
             - E-mail informado: {form.cleaned_data.get("email")}
-            - Data/Hora da solicitação: {form.cleaned_data.get("created_at")}
+            - Data/Hora da solicitação: {localtime(timezone.now()).strftime('%d/%m/%Y %H:%M')}
 
             Por favor, acesse o painel de administração para aprovar ou recusar esta solicitação.
 
