@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from .forms import RegistrationRequestForm
 import smtplib
 
 # Create your views here.
@@ -44,6 +45,18 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': login_form})
 
+
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+def solicitar_registro(request):
+    if request.method == 'POST':
+        form = RegistrationRequestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('courses_list')
+    else:
+        form = RegistrationRequestForm()
+    return render(request, 'solicitacao_registro.html', {'form': form})
