@@ -32,9 +32,5 @@ class RegistrationRequestForm(forms.ModelForm):
         if registration and len(str(registration)) > 12:
             raise forms.ValidationError("O número de matrícula não pode ter mais de 12 dígitos.")
 
-        
-
-            
-
         return registration
     
