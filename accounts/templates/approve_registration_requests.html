@@ -1,21 +1,72 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Solicitações de Registro{% endblock %}
 
 {% block content %}
-<h1>Solicitações de Registro</h1>
-{% for request in registration_requests %}
-    <div class="container mb-4 border p-3">
-        <h2>{{ request.name }}</h2>
-        <p>Matrícula: {{ request.registration }}</p>
-        <p>E-mail: {{ request.email }}</p>
-        <p>Data/Hora da solicitação: {{ request.created_at }}</p>
+<style>
+  .request-card {
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: 0.2s ease-in-out;
+  }
+
+  .request-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .request-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #0d6efd;
+  }
+
+  .request-info {
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+  }
+
+  .request-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+
+  .action-buttons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+  }
+</style>
+
+<div class="container my-2 ">
+  <h2 class="mb-4 fw-bold text-primary">Solicitações de Registro</h2>
+
+  {% if registration_requests %}
+    {% for request in registration_requests %}
+      <div class="request-card border p-4 rounded shadow">
+        <div class="request-title">{{ request.name }}</div>
+        <div class="request-info">Matrícula: <strong>{{ request.registration }}</strong></div>
+        <div class="request-info">E-mail: <strong>{{ request.email }}</strong></div>
+        <div class="request-date">Solicitado em {{ request.created_at|date:"d/m/Y H:i" }}</div>
+
         <form method="post" action="{% url 'approve_registration_request' %}">
-            {% csrf_token %}
-            <input type="hidden" name="request_id" value="{{ request.id }}">
-            <button type="submit" name="action" value="approve">Aprovar</button>
-            <button type="submit" name="action" value="reject">Rejeitar</button>
+          {% csrf_token %}
+          <input type="hidden" name="request_id" value="{{ request.id }}">
+          <div class="action-buttons">
+            <button type="submit" name="action" value="approve" class="btn btn-success">
+              <i class="bi bi-check-circle"></i> Aprovar
+            </button>
+            <button type="submit" name="action" value="reject" class="btn btn-outline-danger">
+              <i class="bi bi-x-circle"></i> Rejeitar
+            </button>
+          </div>
         </form>
-    </div>
-{% endfor %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info">Nenhuma solicitação de registro pendente no momento.</div>
+  {% endif %}
+</div>
 {% endblock %}
