@@ -109,5 +109,5 @@ def approve_registration_request_view(request):
             registration_request.is_rejected = True
             registration_request.save()
 
-    requests_not_rejected = RegistrationRequest.objects.filter(is_approved=False, is_rejected=False)
+    requests_not_rejected = RegistrationRequest.objects.filter(is_approved=False, is_rejected=False).order_by('-created_at')
     return render(request, 'approve_registration_requests.html', {'registration_requests': requests_not_rejected})

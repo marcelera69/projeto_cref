@@ -51,7 +51,7 @@
         <div class="request-info">E-mail: <strong>{{ request.email }}</strong></div>
         <div class="request-date">Solicitado em {{ request.created_at|date:"d/m/Y H:i" }}</div>
 
-        <form method="post" action="{% url 'approve_registration_request' %}">
+        <form method="post" action="{% url 'approve_registration_requests' %}">
           {% csrf_token %}
           <input type="hidden" name="request_id" value="{{ request.id }}">
           <div class="action-buttons">
