@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitações de Registro{% endblock %}
+
+{% block content %}
+<h1>Solicitações de Registro</h1>
+{% for request in registration_requests %}
+    <div class="container mb-4 border p-3">
+        <h2>{{ request.name }}</h2>
+        <p>Matrícula: {{ request.registration }}</p>
+        <p>E-mail: {{ request.email }}</p>
+        <p>Data/Hora da solicitação: {{ request.created_at }}</p>
+        <form method="post" action="{% url 'approve_registration_request' %}">
+            {% csrf_token %}
+            <input type="hidden" name="request_id" value="{{ request.id }}">
+            <button type="submit" name="action" value="approve">Aprovar</button>
+            <button type="submit" name="action" value="reject">Rejeitar</button>
+        </form>
+    </div>
+{% endfor %}
+{% endblock %}

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Courses.views import *
-from accounts.views import register_view, login_view, logout_view, registration_request_view
+from accounts.views import register_view, login_view, logout_view, registration_request_view, approve_registration_request_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('cursos/<int:pk>/deletear/', CourseDeleteView.as_view(), name='course_delete'),
     path('cadastro/',register_view, name='register'),
     path('solicitar_registro/', registration_request_view, name='registration_request'),
+    path('solicitar_registro/aprovar/', approve_registration_request_view, name='approve_registration_request'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('dashboard/', course_dashboard_view, name='course_dashboard'),
