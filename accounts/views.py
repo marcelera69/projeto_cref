@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.views.generic import View, ListView, UpdateView
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationRequestForm
 from django.core.mail import send_mail
@@ -89,3 +90,24 @@ def registration_request_view(request):
     else:
         form = RegistrationRequestForm()
     return render(request, 'registration_request.html', {'form': form})
+
+
+from .models import RegistrationRequest
+def approve_registration_request_view(request):
+    
+
+    if request.method == 'POST':
+        request_id = request.POST.get('request_id')
+        action = request.POST.get('action')
+
+        if action == 'approve':
+            registration_request = RegistrationRequest.objects.get(id=request_id)
+            registration_request.is_approved = True
+            registration_request.save()
+        else:
+            registration_request = RegistrationRequest.objects.get(id=request_id)
+            registration_request.is_rejected = True
+            registration_request.save()
+
+    requests_not_rejected = RegistrationRequest.objects.filter(is_approved=False, is_rejected=False)
+    return render(request, 'approve_registration_requests.html', {'registration_requests': requests_not_rejected})
