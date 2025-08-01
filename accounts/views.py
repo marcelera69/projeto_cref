@@ -93,6 +93,7 @@ def registration_request_view(request):
 
 
 from .models import RegistrationRequest
+from django.contrib import messages
 def approve_registration_request_view(request):
     
 
@@ -104,10 +105,12 @@ def approve_registration_request_view(request):
             registration_request = RegistrationRequest.objects.get(id=request_id)
             registration_request.is_approved = True
             registration_request.save()
+            messages.success(request, f"Solicitação de {registration_request.name} aprovada.")
         else:
             registration_request = RegistrationRequest.objects.get(id=request_id)
             registration_request.is_rejected = True
             registration_request.save()
+            messages.error(request, f"Solicitação de {registration_request.name} rejeitada.")
 
     requests_not_rejected = RegistrationRequest.objects.filter(is_approved=False, is_rejected=False).order_by('-created_at')
     return render(request, 'approve_registration_requests.html', {'registration_requests': requests_not_rejected})
