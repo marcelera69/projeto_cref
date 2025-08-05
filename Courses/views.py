@@ -4,6 +4,7 @@ from django.shortcuts import redirect, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
@@ -16,7 +17,7 @@ from plotly.offline import plot
 import plotly.graph_objects as go
 
 
-class CoursesListView(ListView):
+class CoursesListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'courses.html'
     context_object_name = 'courses'
@@ -36,7 +37,7 @@ class CoursesListView(ListView):
         return courses
     
 
-class CourseDetailView(DetailView):
+class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'course_detail.html'
 

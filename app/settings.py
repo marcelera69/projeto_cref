@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     
 ]
 
+LOGIN_URL = '/login/'  # ou o caminho da sua página de login
 
 # Application definition
 
