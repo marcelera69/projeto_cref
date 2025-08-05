@@ -94,8 +94,11 @@ def registration_request_view(request):
 
 from .models import RegistrationRequest
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
+
+
 def approve_registration_request_view(request):
-    
 
     if request.method == 'POST':
         request_id = request.POST.get('request_id')
@@ -105,7 +108,43 @@ def approve_registration_request_view(request):
             registration_request = RegistrationRequest.objects.get(id=request_id)
             registration_request.is_approved = True
             registration_request.save()
+
+            #Gerar senha aleatória para o usuário
+            random_password = get_random_string(length=10)
+
+            # Criar usuário com os dados da solicitação
+            User.objects.create_user(
+                username=registration_request.registration,
+                email=registration_request.email,
+                password=random_password
+            )
+
+            # Enviar email de aprovação
+            sender = 'centrodereferencia.iff@gmail.com'
+            recipient = registration_request.email
+            message = f"""
+            Olá {registration_request.name},
+
+            Sua solicitação de cadastro foi aprovada com sucesso!
+
+            📌 Detalhes do cadastro:
+            - Login: {registration_request.registration}
+            - Senha: {random_password}
+
+            Por favor, faça login em nossa plataforma usando suas credenciais.
+
+            Atenciosamente,
+            Sistema de Controle de Evasão do CREF.
+            """
+
+            send_mail('Cadastro Aprovado',
+                      message,
+                      sender,
+                      [recipient],
+                     )
+
             messages.success(request, f"Solicitação de {registration_request.name} aprovada.")
+            
         else:
             registration_request = RegistrationRequest.objects.get(id=request_id)
             registration_request.is_rejected = True
