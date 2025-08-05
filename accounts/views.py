@@ -5,9 +5,19 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationRequestForm
 from django.core.mail import send_mail
 from django.utils import timezone
-# Create your views here.
+from django.http import HttpResponseForbidden
+from django.utils.timezone import localtime
+from django.contrib.auth.decorators import user_passes_test
 
+
+
+# Função que verifica se o usuário é superusuário
+def is_superuser(user):
+    return user.is_superuser
+
+@user_passes_test(is_superuser)
 def register_view(request):
+    
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
@@ -52,8 +62,9 @@ def logout_view(request):
     return redirect('login')
 
 
-from django.utils.timezone import localtime
+@user_passes_test(is_superuser)
 def registration_request_view(request):
+
     if request.method == 'POST':
         form = RegistrationRequestForm(request.POST)
         if form.is_valid():
@@ -98,6 +109,7 @@ from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
 
 
+@user_passes_test(is_superuser)
 def approve_registration_request_view(request):
 
     if request.method == 'POST':
