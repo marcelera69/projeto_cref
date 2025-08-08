@@ -1,7 +1,7 @@
 import csv
 import os
 from django.core.management.base import BaseCommand
-from Courses.models import Student, Teacher, Group, Course, Enrollment
+from Courses.models import Student, Teacher, Group, Course, Enrollment, HistoryAmountStudents, CourseInventory
 
 class Command(BaseCommand):
     help = 'Importa alunos de um arquivo CSV para o banco de dados'
@@ -64,3 +64,29 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS(f'Matriculado "{student.name}" no curso "{course.name}".'))
                 else:
                     self.stdout.write(f'"{student.name}" já está matriculado no curso "{course.name}".')
+
+        # Atualiza a quantidade de alunos no curso
+        total = Enrollment.objects.filter(course=course).count()
+        history = HistoryAmountStudents(
+        course=course,
+        amount_students=total,
+        )
+        history.save()
+        self.stdout.write(self.style.SUCCESS(f'Quantidade de alunos atualizada para o curso "{course.name}".'))
+        
+        # Atualiza o inventário de cursos
+        courses_count = Course.objects.all().count()
+        # Pegando o número de alunos por curso
+        sum_alunos_per_course = 0
+        for course in Course.objects.all():
+            sum_alunos_per_course += course.students.count()
+            if courses_count > 0:
+                average_students = sum_alunos_per_course / courses_count
+            else:
+                average_students = 0
+
+        # Atualizando os regisstros no modelo CourseInventory
+        CourseInventory.objects.create(
+            courses_count=courses_count,
+            average_students_per_course=average_students,
+        )
