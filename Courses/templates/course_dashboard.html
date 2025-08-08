@@ -94,9 +94,76 @@
       {% endif %}
   </div>
 
+  <!-- Gráfico filtrado por curso -->
+  <section class="bg-white rounded-4 shadow-sm border p-4 mb-5" id="course-graph-card" style="min-height: 420px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="fw-bold text-primary" id="course-graph-title">Gráfico por Curso</h2>
+      <select id="course-selector" class="form-select" style="width:auto;">
+        <option value="">Selecione um curso</option>
+        {% for course in all_courses %}
+          <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <hr>
+    <div id="course-graph-container" class="h-100 d-flex align-items-center justify-content-center">
+      <p class="text-muted fst-italic">Escolha um curso para visualizar o gráfico.</p>
+    </div>
+  </section>
+
+
   <!-- Rodapé / resumo opcional -->
   <footer class="text-center text-muted mb-5">
     <small>© 2025 Sistema de Controle de Evasão. Todos os direitos reservados.</small>
   </footer>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  document.getElementById("course-selector").addEventListener("change", function () {
+    const courseId = this.value;
+    const container = document.getElementById("course-graph-container");
+
+    if (!courseId) {
+      container.innerHTML = `<p class="text-muted fst-italic">Escolha um curso para visualizar o gráfico.</p>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="spinner-border text-primary" role="status">
+                             <span class="visually-hidden">Carregando...</span>
+                           </div>`;
+
+    fetch(`/dashboard/course-graph/${courseId}/`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("course-graph-title").innerText = `Gráfico - ${data.course_name}`;
+
+        // Limpa o container e cria uma div para o gráfico
+        container.innerHTML = '<div id="plotly-graph" style="width:100%;height:100%;"></div>';
+
+        const layout = {
+          title: `Histórico de Alunos - ${data.course_name}`,
+          xaxis: { title: 'Data', tickangle: -45 },
+          yaxis: { title: 'Quantidade de Alunos', tickformat: 'd' },
+          margin: { l: 40, r: 40, t: 50, b: 100 },
+        };
+
+        const trace = {
+          x: data.x,
+          y: data.y,
+          type: 'scatter',
+          mode: 'lines+markers',
+        };
+
+        Plotly.newPlot('plotly-graph', [trace], layout, { responsive: true });
+      })
+      .catch(err => {
+        console.error(err);
+        container.innerHTML = `<p class="text-danger fst-italic">Erro ao carregar gráfico.</p>`;
+      });
+  });
+</script>
+
 {% endblock %}

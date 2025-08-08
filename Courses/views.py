@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Course
 
 #Importações de modelos e formulários dos meus próprios arquivos
 from Courses.models import *
@@ -177,6 +180,7 @@ def course_dashboard_view(request):
     total_students = Student.objects.count()
     total_teachers = Teacher.objects.count()
     total_tutors = Tutor.objects.count()
+    all_courses = Course.objects.all().order_by('name')
     
     # Gerar o gráfico de alunos por curso
     graph_history_studants = graph_average_students_per_course()
@@ -190,8 +194,27 @@ def course_dashboard_view(request):
         'total_tutors': total_tutors,
         'graph_history_studants': graph_history_studants,
         'latest_courses': latest_courses,
+        'all_courses': all_courses,
     }
     return render(request, 'course_dashboard.html', context)
+
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Course, HistoryAmountStudents
+
+def course_specific_graph(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    data = HistoryAmountStudents.objects.filter(course=course).order_by('date')
+
+    dates = [item.date.strftime('%Y-%m-%d') for item in data]
+    amounts = [item.amount_students for item in data]
+
+    return JsonResponse({
+        'course_name': course.name,
+        'x': dates,
+        'y': amounts,
+    })
 
 
 def course_module_view(request, pk):
@@ -215,7 +238,6 @@ def course_module_view(request, pk):
         'form': form,
     }
     return render(request, 'course_modules.html', context)
-
 
 class ModuleDetailView(DetailView):
     model = Module

@@ -35,6 +35,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('dashboard/', course_dashboard_view, name='course_dashboard'),
+    path('dashboard/course-graph/<int:pk>/', course_specific_graph, name='course_specific_graph'),
     path('cursos/<int:pk>/modulos/', course_module_view, name='course_modules'),
     path('cursos/<int:pk>/modulos/<int:module_pk>/', ModuleDetailView.as_view(), name='course_module_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
