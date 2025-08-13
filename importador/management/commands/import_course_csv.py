@@ -1,10 +1,17 @@
 import csv
 import os
+import difflib
+import re
 from django.core.management.base import BaseCommand
-from Courses.models import Student, Teacher, Group, Course, Enrollment, HistoryAmountStudents, CourseInventory
+from django.utils.timezone import make_aware
+from datetime import datetime
+from Courses.models import (
+    Student, Teacher, Group, Course,
+    Enrollment, HistoryAmountStudents, CourseInventory
+)
 
 class Command(BaseCommand):
-    help = 'Importa alunos de um arquivo CSV para o banco de dados'
+    help = 'Importa alunos de um arquivo CSV para o banco de dados, sincronizando a base'
 
     def add_arguments(self, parser):
         parser.add_argument('csvfile', type=str, help='Arquivo CSV para importar')
@@ -12,81 +19,125 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         csvfile = kwargs['csvfile']
 
-        # Nome do curso será o nome do arquivo (sem extensão)
-        course_name = os.path.splitext(os.path.basename(csvfile))[0]
+        # 📁 Extrai nome do curso do nome do arquivo CSV
+        filename = os.path.splitext(os.path.basename(csvfile))[0]
 
-        # Cria ou pega o curso
-        course, created = Course.objects.get_or_create(name=course_name)
-        if created:
-            self.stdout.write(self.style.SUCCESS(f'Curso "{course_name}" criado.'))
+        # 🔍 Função para limpar nome
+        def limpar_nome_curso(nome):
+            nome = nome.lower()
+            nome = re.sub(r'alunos? (da|do|de|das|dos)\s+', '', nome)
+            nome = re.sub(r'[^\w\s\(\)\-]', '', nome)  # remove caracteres especiais
+            nome = nome.strip()
+            return nome
+
+        nome_limpo = limpar_nome_curso(filename)
+
+        # 🔍 Busca curso mais semelhante no banco
+        todos_cursos = Course.objects.all()
+        melhor_curso = None
+        maior_similaridade = 0.0
+        limiar_similaridade = 0.80
+
+        for curso in todos_cursos:
+            nome_db = limpar_nome_curso(curso.name)
+            similaridade = difflib.SequenceMatcher(None, nome_limpo, nome_db).ratio()
+            if similaridade > maior_similaridade:
+                maior_similaridade = similaridade
+                melhor_curso = curso
+
+        if melhor_curso and maior_similaridade >= limiar_similaridade:
+            course = melhor_curso
+            self.stdout.write(self.style.SUCCESS(
+                f'Curso semelhante encontrado: "{course.name}" (similaridade: {maior_similaridade:.2f}). Será utilizado.'
+            ))
         else:
-            self.stdout.write(f'Curso "{course_name}" já existe.')
+            course = Course.objects.create(name=filename)
+            self.stdout.write(self.style.SUCCESS(f'Curso "{filename}" criado.'))
+
+        csv_emails = set()
 
         with open(csvfile, encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
-            for row in reader:
-                self.stdout.write(str(row))  # Para depurar os dados lidos
 
-                # Pegando dados do CSV (ajuste nomes das colunas conforme seu CSV)
-                nome = row.get('Nome') or row.get('\ufeffNome')  # Caso tenha BOM
-                code = row.get('Sobrenome')
-                email = row.get('Endereço de email')
-                grupo_nome = row.get('Grupos')
+            # Limpa os cabeçalhos para evitar problemas de BOM ou espaços
+            reader.fieldnames = [field.strip().replace('\ufeff', '') for field in reader.fieldnames]
 
-                # Cria ou pega o estudante
-                student, created = Student.objects.get_or_create(
+            def get_field(row, keys):
+                for key in keys:
+                    value = row.get(key)
+                    if value:
+                        return value.strip()
+                return None
+
+            for row_num, row in enumerate(reader, start=2):
+                self.stdout.write(f'🔍 Processando linha {row_num}: {row}')
+
+                nome = get_field(row, ['Nome'])
+                code = get_field(row, ['Sobrenome'])
+                email = get_field(row, ['Endereço de email', 'E-mail', 'Email'])
+                grupo_nome = get_field(row, ['Grupos', 'Grupo'])
+
+                if not email:
+                    self.stdout.write(self.style.WARNING(f"Linha {row_num} ignorada: sem email"))
+                    continue
+
+                csv_emails.add(email)
+
+                student, _ = Student.objects.get_or_create(
                     email=email,
                     defaults={'name': nome, 'code': code}
                 )
-                if created:
-                    self.stdout.write(self.style.SUCCESS(f'Estudante "{nome}" criado.'))
-                else:
-                    self.stdout.write(f'Estudante "{nome}" já existe.')
 
-                # Procura o grupo com mesmo nome E ligado a esse curso
+                group = None
                 if grupo_nome:
-                    group = Group.objects.filter(name=grupo_nome, course=course).first()
-                    if not group:
-                        # Se não existir, cria com tutor None (ou defina um tutor padrão)
-                        group = Group.objects.create(name=grupo_nome, course=course, tutor=None)
-                        self.stdout.write(self.style.SUCCESS(f'Grupo "{grupo_nome}" criado para o curso "{course_name}".'))
-                    else:
-                        self.stdout.write(f'Grupo "{grupo_nome}" já existe para o curso "{course_name}".')
+                    group, _ = Group.objects.get_or_create(
+                        name=grupo_nome,
+                        course=course,
+                        defaults={'tutor': None}
+                    )
 
-                # Cria o Enrollment para vincular aluno ao curso
-                enrollment, created = Enrollment.objects.get_or_create(
+                enrollment, created = Enrollment.objects.update_or_create(
                     student=student,
                     course=course,
-                    group=group if grupo_nome else None,
-                    defaults={'status': 'active'}
+                    defaults={'group': group, 'status': 'active'}
                 )
+
                 if created:
                     self.stdout.write(self.style.SUCCESS(f'Matriculado "{student.name}" no curso "{course.name}".'))
                 else:
-                    self.stdout.write(f'"{student.name}" já está matriculado no curso "{course.name}".')
+                    self.stdout.write(f'"{student.name}" já estava matriculado. Matrícula atualizada.')
 
-        # Atualiza a quantidade de alunos no curso
+        # 🔥 Remove alunos que saíram do CSV
+        enrollments_db = Enrollment.objects.filter(course=course)
+        for enrollment in enrollments_db:
+            if enrollment.student.email not in csv_emails:
+                enrollment.delete()
+                self.stdout.write(self.style.WARNING(
+                    f'Aluno "{enrollment.student.name}" removido da matrícula do curso "{course.name}".'
+                ))
+
+        # 📊 Atualiza histórico de quantidade de alunos
         total = Enrollment.objects.filter(course=course).count()
-        history = HistoryAmountStudents(
-        course=course,
-        amount_students=total,
-        )
-        history.save()
-        self.stdout.write(self.style.SUCCESS(f'Quantidade de alunos atualizada para o curso "{course.name}".'))
-        
-        # Atualiza o inventário de cursos
-        courses_count = Course.objects.all().count()
-        # Pegando o número de alunos por curso
-        sum_alunos_per_course = 0
-        for course in Course.objects.all():
-            sum_alunos_per_course += course.students.count()
-            if courses_count > 0:
-                average_students = sum_alunos_per_course / courses_count
-            else:
-                average_students = 0
 
-        # Atualizando os regisstros no modelo CourseInventory
+        # Você pode definir uma data fixa se quiser (descomente para isso):
+        # data_fixa = make_aware(datetime(2025, 7, 24, 10, 0))
+        # HistoryAmountStudents.objects.create(course=course, amount_students=total, date=data_fixa)
+
+        HistoryAmountStudents.objects.create(course=course, amount_students=total)
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Histórico atualizado: {total} alunos no curso "{course.name}".'
+        ))
+
+        # 📦 Atualiza o inventário de cursos
+        courses = Course.objects.prefetch_related('students').all()
+        courses_count = courses.count()
+        total_alunos = sum(course.students.count() for course in courses)
+        media_alunos = total_alunos / courses_count if courses_count > 0 else 0
+
         CourseInventory.objects.create(
             courses_count=courses_count,
-            average_students_per_course=average_students,
+            average_students_per_course=media_alunos,
         )
+
+        self.stdout.write(self.style.SUCCESS('Inventário de cursos atualizado.'))

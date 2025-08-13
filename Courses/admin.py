@@ -1,7 +1,7 @@
 from django.contrib import admin
-from Courses.models import Student, Teacher, Tutor, Group, Course, Module, Enrollment, Activity, ActivityHasStudents
+from Courses.models import Student, Teacher, Tutor, Group, Course, Module, Enrollment, Activity, ActivityHasStudents, HistoryAmountStudents
 
-
+#Classe para usar o modelo MOdule como inline no admin do Course
 class ModuleInline(admin.TabularInline):
     model = Module
     extra = 0
@@ -18,13 +18,18 @@ class EnrollmentInline(admin.TabularInline):
     fields = ('student', 'group', 'status')
     ordering = ('student',)
 
+class HistoryAmountStudentsInline(admin.TabularInline):
+    model = HistoryAmountStudents
+    extra = 0
+    fields = ('course', 'amount_students')
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
     ordering = ('name',)
-    inlines = [EnrollmentInline, ModuleInline]
-    
+    inlines = [EnrollmentInline, ModuleInline, HistoryAmountStudentsInline]
+
 
 class ActivityHasStudentsInline(admin.TabularInline):
     model = ActivityHasStudents
@@ -55,15 +60,19 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')
     search_fields = ('name',)
 
+
 @admin.register(Tutor)
 class TutorAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'email')
     search_fields = ('name',)
 
+
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'tutor__name')
     search_fields = ('name', 'tutor',)
+
+
 
 
 
