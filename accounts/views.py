@@ -15,7 +15,6 @@ from django.contrib.auth.decorators import user_passes_test
 def is_superuser(user):
     return user.is_superuser
 
-@user_passes_test(is_superuser)
 def register_view(request):
     
     if request.method == 'POST':
@@ -62,7 +61,6 @@ def logout_view(request):
     return redirect('login')
 
 
-@user_passes_test(is_superuser)
 def registration_request_view(request):
 
     if request.method == 'POST':

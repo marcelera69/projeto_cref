@@ -225,7 +225,7 @@
           <a href="{% url 'course_dashboard' %}"
             class="{% if request.resolver_match.url_name == 'course_dashboard' %}active{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboards">
             <i class="bi bi-reception-4"></i>
-            <span>Dashboards</span>
+            <span>Panorama Geral</span>
           </a>
           {% if user.is_authenticated %}
           <a href="{% url 'courses_list' %}"
@@ -285,7 +285,7 @@
           <button class="btn btn-outline-light" id="sidebarToggle">
             <i class="bi bi-list"></i>
           </button>
-          <div class="navbar-title">Sistema de Controle de Evasão</div>
+          <div class="navbar-title">Sistema de Controle de Matrículas na EAD do Centro de Referência em Tecnologia, Informação e Comunicação na Educação</div>
         </nav>
         <main class="content">
           {% block content %}
