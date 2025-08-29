@@ -135,7 +135,7 @@
                              <span class="visually-hidden">Carregando...</span>
                            </div>`;
 
-    fetch(`/dashboard/course-graph/${courseId}/`)
+    fetch(`/cursos/dashboard/course-graph/${courseId}/`)
       .then(res => res.json())
       .then(data => {
         document.getElementById("course-graph-title").innerText = `Gráfico - ${data.course_name}`;

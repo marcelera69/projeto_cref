@@ -19,7 +19,7 @@ from Courses.forms import CourseModelForm, ModuleModelForm
 from plotly.offline import plot
 import plotly.graph_objects as go
 
-
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class CoursesListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'courses.html'
@@ -39,7 +39,7 @@ class CoursesListView(LoginRequiredMixin, ListView):
 
         return courses
     
-
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'course_detail.html'
@@ -141,7 +141,7 @@ class CourseupdateView(UpdateView):
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_delete.html'
-    success_url = '/cursos/'
+    success_url = '/cursos/lista_cursos/'
 
 
 def graph_average_students_per_course():
@@ -216,7 +216,7 @@ def course_specific_graph(request, pk):
         'y': amounts,
     })
 
-
+@method_decorator(login_required(login_url='login'), name='dispatch')
 def course_module_view(request, pk):
     course = get_object_or_404(Course, pk=pk)
 
@@ -239,6 +239,8 @@ def course_module_view(request, pk):
     }
     return render(request, 'course_modules.html', context)
 
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class ModuleDetailView(DetailView):
     model = Module
     template_name = 'course_module_detail.html'

@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.views.generic import View, ListView, UpdateView
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import views as auth_views
 from .forms import RegistrationRequestForm
 from django.core.mail import send_mail
 from django.utils import timezone
-from django.http import HttpResponseForbidden
 from django.utils.timezone import localtime
 from django.contrib.auth.decorators import user_passes_test
 
@@ -15,27 +14,13 @@ from django.contrib.auth.decorators import user_passes_test
 def is_superuser(user):
     return user.is_superuser
 
+@user_passes_test(is_superuser)
 def register_view(request):
     
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
             user_form.save()
-            '''
-            Enviar email de notificação
-            sender = 'centrodereferencia.iff@gmail.com'
-            recipient = 'ceeloalves.curso@gmail.com'
-            message = f'Novo cadastro solicitado:\nUsuario: {user_form.cleaned_data["username"]}\nSenha: {user_form.cleaned_data["password1"]}'
-
-            servidor_email = smtplib.SMTP('smtp.gmail.com', 587)
-            servidor_email.starttls()
-            servidor_email.login('centrodereferencia.iff@gmail.com', 'bdgp aern bmbj qgiv')
-            servidor_email.sendmail(
-                sender,
-                [recipient],
-                message
-            )
-            '''
             return redirect('login')
     else:
         user_form = UserCreationForm()
@@ -44,6 +29,9 @@ def register_view(request):
 
 
 def login_view(request):
+    if not request.user.is_anonymous:
+        return redirect('courses_list')
+    
     if request.method == 'POST':
         login_form = AuthenticationForm(request, data=request.POST)
         if login_form.is_valid():
@@ -60,6 +48,9 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = 'password_change.html'
+    success_url = '/cursos/lista_cursos'
 
 def registration_request_view(request):
 
@@ -84,7 +75,7 @@ def registration_request_view(request):
             Por favor, acesse o painel de administração para aprovar ou recusar esta solicitação.
 
             Atenciosamente,  
-            Sistema de Controle de Evasão do CREF.
+            Sistema de Controle de Matrículas na EAD do Centro de Referência em Tecnologia, Informação e Comunicação na Educação.
             """
 
             
@@ -105,7 +96,10 @@ from .models import RegistrationRequest
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
-
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
 
 @user_passes_test(is_superuser)
 def approve_registration_request_view(request):
@@ -119,14 +113,24 @@ def approve_registration_request_view(request):
             registration_request.is_approved = True
             registration_request.save()
 
-            #Gerar senha aleatória para o usuário
+            # Gerar senha aleatória para o usuário
             random_password = get_random_string(length=10)
 
             # Criar usuário com os dados da solicitação
-            User.objects.create_user(
+            new_user = User.objects.create_user(
                 username=registration_request.registration,
                 email=registration_request.email,
                 password=random_password
+            )
+
+            # Gerar token e uid para o NOVO usuário
+            uid = urlsafe_base64_encode(force_bytes(new_user.pk))
+            token = default_token_generator.make_token(new_user)
+
+
+            # Montar URL absoluta
+            reset_url = request.build_absolute_uri(
+                reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
             )
 
             # Enviar email de aprovação
@@ -141,7 +145,8 @@ def approve_registration_request_view(request):
             - Login: {registration_request.registration}
             - Senha: {random_password}
 
-            Por favor, faça login em nossa plataforma usando suas credenciais.
+            Por favor, faça login em nossa plataforma usando suas credenciais ou clique no link abaixo para definir sua senha:
+            {reset_url}.
 
             Atenciosamente,
             Sistema de Controle de Evasão do CREF.
