@@ -173,6 +173,57 @@ def graph_average_students_per_course():
     
     return grafico_html
 
+from django.db.models.functions import TruncDate
+
+def grafico_barras_agrupadas():
+    cursos = Course.objects.all()
+
+    datas = (
+        HistoryAmountStudents.objects
+        .annotate(date_only=TruncDate('date'))
+        .values('date_only')
+        .distinct()
+        .order_by('-date_only')[:2]
+    )
+    datas = sorted([d['date_only'] for d in datas])
+
+    data_por_curso = {curso.name: {} for curso in cursos}
+
+    for curso in cursos:
+        for data in datas:
+            obj = HistoryAmountStudents.objects.filter(
+                course=curso,
+                date__date=data
+            ).first()
+            data_por_curso[curso.name][data] = obj.amount_students if obj else 0
+
+    cursos_nomes = [curso.name for curso in cursos]
+    alunos_data1 = [data_por_curso[curso][datas[0]] for curso in cursos_nomes]
+    alunos_data2 = [data_por_curso[curso][datas[1]] for curso in cursos_nomes]
+
+    trace1 = go.Bar(
+        x=cursos_nomes,
+        y=alunos_data1,
+        name=datas[0].strftime('%d/%m/%Y'),
+        marker_color='blue'
+    )
+    trace2 = go.Bar(
+        x=cursos_nomes,
+        y=alunos_data2,
+        name=datas[1].strftime('%d/%m/%Y'),
+        marker_color='orange'
+    )
+
+    data = [trace1, trace2]
+    layout = go.Layout(
+        title='Quantidade de Alunos por Curso em 2 Datas',
+        barmode='group'
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+    return plot_div
+
 
 #@login_required(login_url='login')
 def course_dashboard_view(request):
@@ -185,6 +236,9 @@ def course_dashboard_view(request):
     # Gerar o gráfico de alunos por curso
     graph_history_studants = graph_average_students_per_course()
 
+    # Gráfico de barras agrupadas
+    graph_bars = grafico_barras_agrupadas()
+
     latest_courses = Course.objects.order_by('-id')[:2]
 
     context = {
@@ -195,6 +249,7 @@ def course_dashboard_view(request):
         'graph_history_studants': graph_history_studants,
         'latest_courses': latest_courses,
         'all_courses': all_courses,
+        'graph_bars': graph_bars
     }
     return render(request, 'course_dashboard.html', context)
 
