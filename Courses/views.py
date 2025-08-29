@@ -216,7 +216,7 @@ def course_specific_graph(request, pk):
         'y': amounts,
     })
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
+@login_required(login_url='login')
 def course_module_view(request, pk):
     course = get_object_or_404(Course, pk=pk)
 
