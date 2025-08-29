@@ -14,20 +14,6 @@ from django.contrib.auth.decorators import user_passes_test
 def is_superuser(user):
     return user.is_superuser
 
-@user_passes_test(is_superuser)
-def register_view(request):
-    
-    if request.method == 'POST':
-        user_form = UserCreationForm(request.POST)
-        if user_form.is_valid():
-            user_form.save()
-            return redirect('login')
-    else:
-        user_form = UserCreationForm()
-
-    return render(request, 'register.html', {'form': user_form})
-
-
 def login_view(request):
     if not request.user.is_anonymous:
         return redirect('courses_list')
@@ -48,9 +34,32 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
 class PasswordChangeView(auth_views.PasswordChangeView):
     template_name = 'password_change.html'
     success_url = '/cursos/lista_cursos'
+
+class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'password_reset_confirm.html'
+    success_url = '/contas/reset/done/'
+
+class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'password_reset_done.html'
+    success_url = '/cursos/lista_cursos'
+
+@user_passes_test(is_superuser)
+def register_view(request):
+    
+    if request.method == 'POST':
+        user_form = UserCreationForm(request.POST)
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('login')
+    else:
+        user_form = UserCreationForm()
+
+    return render(request, 'register.html', {'form': user_form})
+
 
 def registration_request_view(request):
 
