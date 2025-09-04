@@ -225,7 +225,7 @@ def grafico_barras_agrupadas():
     return plot_div
 
 
-#@login_required(login_url='login')
+@login_required(login_url='login')
 def course_dashboard_view(request):
     total_courses = Course.objects.count()
     total_students = Student.objects.count()
