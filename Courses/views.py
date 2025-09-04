@@ -201,14 +201,37 @@ def grafico_barras_agrupadas():
     alunos_data1 = [data_por_curso[curso][datas[0]] for curso in cursos_nomes]
     alunos_data2 = [data_por_curso[curso][datas[1]] for curso in cursos_nomes]
 
+
+    import re
+    cursos_abreviados = []
+    for curso in cursos_nomes:
+        # Extrai o campus
+        campus_match = re.search(r'\(Campus (.*?)\)', curso)
+        cidade = campus_match.group(1) if campus_match else ""
+
+        # Remove tudo antes de "em" ou "na"
+        match = re.search(r'\b(?:em|na)\s+(.*)', curso, flags=re.IGNORECASE)
+        if match:
+            conteudo = match.group(1).strip()
+        else:
+            conteudo = curso  # fallback
+
+        # Pega os primeiros `limite` caracteres do conteúdo
+        truncado = conteudo[:15] + "..."
+
+        curso = f"{truncado} ({cidade})" if cidade else truncado
+        cursos_abreviados.append(curso)
+
+    print(cursos_abreviados)
+
     trace1 = go.Bar(
-        x=cursos_nomes,
+        x=cursos_abreviados,
         y=alunos_data1,
         name=datas[0].strftime('%d/%m/%Y'),
         marker_color='blue'
     )
     trace2 = go.Bar(
-        x=cursos_nomes,
+        x=cursos_abreviados,
         y=alunos_data2,
         name=datas[1].strftime('%d/%m/%Y'),
         marker_color='orange'
