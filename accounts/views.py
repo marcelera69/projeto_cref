@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import get_user_model
 
 
 
@@ -69,7 +70,15 @@ def registration_request_view(request):
             form.save()
             #Enviar email de solicitação de cadastro
             sender = 'centrodereferencia.iff@gmail.com'
-            recipient = 'ceeloalves.curso@gmail.com'
+            recipient = list(
+                get_user_model().objects.filter(
+                    is_superuser=True,
+                    is_active=True,
+                )
+                .exclude(email="")
+                .values_list("email", flat=True)
+                .distinct()
+            )
             message = f"""
             Olá,
 
@@ -91,7 +100,7 @@ def registration_request_view(request):
             send_mail('Novo Cadastro Solicitado',
                       message,
                       sender,
-                      [recipient],
+                      recipient,
                      )
 
             return redirect('courses_list')
