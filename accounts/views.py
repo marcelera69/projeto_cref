@@ -103,11 +103,21 @@ def registration_request_view(request):
                       recipient,
                      )
 
-            return redirect('courses_list')
+            request.session['registration_request_success'] = True
+            return redirect('registration_request')
 
     else:
         form = RegistrationRequestForm()
-    return render(request, 'registration_request.html', {'form': form})
+
+    registration_success = (
+        request.session.pop('registration_request_success', False)
+        if request.method == 'GET'
+        else False
+    )
+    return render(request, 'registration_request.html', {
+        'form': form,
+        'registration_success': registration_success,
+    })
 
 
 from .models import RegistrationRequest

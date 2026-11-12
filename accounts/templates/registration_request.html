@@ -22,4 +22,24 @@
 <button class="primary" type="submit">Enviar solicitação <span aria-hidden="true">↗</span></button>
 </form>
 <p class="switch">Já tem acesso? <a href="{% url 'login' %}">Voltar para o login</a></p>
+
+{% if registration_success %}
+<dialog class="success-dialog" id="registration-success" aria-labelledby="success-title" aria-describedby="success-description">
+  <div class="success-mark" aria-hidden="true">✓</div>
+  <div class="eyebrow">Solicitação enviada</div>
+  <h2 id="success-title">Tudo certo!</h2>
+  <p id="success-description">Recebemos sua solicitação de cadastro. Após a análise de um administrador, você receberá as instruções de acesso por e-mail.</p>
+  <a class="primary" href="{% url 'login' %}" autofocus>Voltar para o login <span aria-hidden="true">↗</span></a>
+</dialog>
+<script>
+(function () {
+  const dialog = document.getElementById('registration-success');
+  dialog.showModal();
+  dialog.addEventListener('cancel', function (event) {
+    event.preventDefault();
+    window.location.href = dialog.querySelector('a').href;
+  });
+})();
+</script>
+{% endif %}
 {% endblock %}
