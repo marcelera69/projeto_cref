@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173e33">
+<title>{% block title %}Acesso{% endblock %} · CREF / IFF</title>
+<link rel="stylesheet" href="{% static 'accounts/auth.css' %}">
+</head>
+<body>
+<div class="auth-shell">
+<aside class="story" aria-label="Sobre o sistema">
+  <div class="brand"><div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div><strong>CREF / IFF</strong><small>Acompanhamento de cursos EaD</small></div></div>
+  <div class="story-copy"><div class="eyebrow">Gestão acadêmica · Pós-graduação EaD</div><h1>Um novo olhar<br>para cada<br><span>trajetória.</span></h1><p>Informações organizadas para apoiar o acompanhamento dos cursos e o trabalho de quem faz a educação acontecer.</p></div>
+  <div class="story-note">Instituto Federal Fluminense<br>Pós-graduações EaD sob gestão do CREF</div><div class="orbit" aria-hidden="true"></div>
+</aside>
+<section class="form-side" aria-labelledby="form-title">
+  <div class="topline"><span class="status-dot" aria-hidden="true"></span>Acesso restrito à equipe autorizada</div>
+  <main class="form-wrap">
+    <img class="institution" src="{% static 'images/logo_iff.png' %}" alt="Instituto Federal Fluminense">
+    {% if messages %}{% for message in messages %}<div class="alert {% if message.tags == 'error' %}alert-error{% endif %}" role="status">{{ message }}</div>{% endfor %}{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer"><span>© {% now "Y" %} Instituto Federal Fluminense</span><span>CREF · Cursos EaD</span></footer>
+</section>
+</div>
+<script>
+document.querySelectorAll('[data-toggle-password]').forEach(function(button){button.addEventListener('click',function(){var input=document.getElementById(button.getAttribute('aria-controls'));var show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'Ocultar':'Mostrar';button.setAttribute('aria-pressed',String(show));});});
+document.querySelectorAll('form').forEach(function(form){form.addEventListener('submit',function(){if(!form.checkValidity())return;var button=form.querySelector('button[type="submit"]');button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='Aguarde…';});});
+</script>
+</body>
+</html>
